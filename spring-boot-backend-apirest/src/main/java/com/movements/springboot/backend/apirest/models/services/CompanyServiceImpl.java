@@ -4,6 +4,8 @@ import java.util.List;
 
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -26,6 +28,13 @@ public class CompanyServiceImpl implements ICompanyService{
 	public List<Company> findAll() {
 		return (List<Company>) companyDao.findAll();
 	}
+	
+	@Override
+	@Transactional(readOnly = true)
+	public Page<Company> findAll(Pageable pageable) {
+		return companyDao.findAll(pageable);
+	}
+
 
 	@Override
 	@Transactional

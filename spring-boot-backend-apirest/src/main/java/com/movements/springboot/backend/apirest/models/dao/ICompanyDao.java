@@ -3,12 +3,12 @@ package com.movements.springboot.backend.apirest.models.dao;
 import java.util.List;
 import java.util.Optional;
 
+import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
-import org.springframework.data.repository.CrudRepository;
 
 import com.movements.springboot.backend.apirest.models.entity.Company;
 
-public interface ICompanyDao extends CrudRepository<Company, Long>{
+public interface ICompanyDao extends JpaRepository<Company, Long>{
 
 	//@Query("select c from Company c where c.name like %?1%")
 	//public List<Company> findByName(String term);

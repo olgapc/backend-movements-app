@@ -2,7 +2,7 @@ package com.movements.springboot.backend.apirest.auth;
 
 public class JwtConfig {
 	
-	public static final String SECRET_KEY = "alguna.clau.secreta.8363!6&53?56246º0#@28";
+	public static final String SECRET_KEY = "quelque.clée.secrète.%/85%/%$";
 	
 	public static final String RSA_PRIVATE = "-----BEGIN RSA PRIVATE KEY-----\n" + 
 			"MIIEpAIBAAKCAQEA3YHF50jwlaNyj+pKkh1Kb4mtnZbw+vrkdJWGQGLJa1KbXo2i\n" + 

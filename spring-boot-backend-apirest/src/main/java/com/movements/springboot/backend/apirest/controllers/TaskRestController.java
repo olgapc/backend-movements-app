@@ -11,6 +11,9 @@ import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 //import org.springframework.security.access.annotation.Secured;
@@ -96,6 +99,13 @@ public class TaskRestController {
 		return taskService.findAll();
 	}
 
+	@GetMapping("/tasks/page/{page}")
+	public Page<Task> index(@PathVariable Integer page) {
+		Pageable pageable = PageRequest.of(page, 4);
+		return taskService.findAll(pageable);
+	}
+	
+	
 	@PostMapping("/tasks")
 	@ResponseStatus(HttpStatus.CREATED)
 	public ResponseEntity<?> create(@Valid @RequestBody Task task, BindingResult result) {

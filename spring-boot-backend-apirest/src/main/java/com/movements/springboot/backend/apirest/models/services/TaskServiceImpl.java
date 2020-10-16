@@ -3,6 +3,8 @@ package com.movements.springboot.backend.apirest.models.services;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -37,6 +39,17 @@ public class TaskServiceImpl implements ITaskService{
 	public List<Task> findAll() {		
 		return (List<Task>) taskDao.findAll();
 	}
+
+	
+	
+	
+	@Override
+	public Page<Task> findAll(Pageable pageable) {
+		return taskDao.findAll(pageable);
+	}
+
+
+
 
 	@Override
 	@Transactional

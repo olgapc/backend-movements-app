@@ -1,10 +1,10 @@
 package com.movements.springboot.backend.apirest.models.dao;
+import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
-import org.springframework.data.repository.CrudRepository;
 
 import com.movements.springboot.backend.apirest.models.entity.Task;
 
-public interface ITaskDao extends CrudRepository<Task, Long>{
+public interface ITaskDao extends JpaRepository<Task, Long>{
 	
 	@Query(nativeQuery = true, value="select * from tasks t "
 			+ "left join tasks t2 on t.id = t2.maintask_fk "

@@ -2,6 +2,8 @@ package com.movements.springboot.backend.apirest.models.services;
 
 import java.util.List;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 import com.movements.springboot.backend.apirest.models.entity.Company;
 import com.movements.springboot.backend.apirest.models.entity.Employee;
@@ -12,6 +14,8 @@ public interface ITaskService {
 		
 		//tasks methods
 		public List<Task> findAll();
+		
+		public Page<Task> findAll(Pageable pageable);
 
 		public Task save(Task task);
 		

@@ -34,6 +34,7 @@ import com.movements.springboot.backend.apirest.editors.PascalCaseEditor;
 import com.movements.springboot.backend.apirest.editors.UpperCaseEditor;
 import com.movements.springboot.backend.apirest.models.entity.Company;
 import com.movements.springboot.backend.apirest.models.entity.Employee;
+import com.movements.springboot.backend.apirest.models.entity.Task;
 import com.movements.springboot.backend.apirest.models.services.ICompanyService;
 import com.movements.springboot.backend.apirest.models.services.IEmployeeService;
 import com.movements.springboot.backend.apirest.validation.EmployeeValidator;
@@ -72,6 +73,7 @@ public class EmployeeRestController {
 	public List<Employee> index() {
 		return employeeService.findAll();
 	}
+	
 	
 	//@Secured("ROLE_USER")
 	@GetMapping(value = "/employees/{id}")
