@@ -4,8 +4,13 @@ import java.io.Serializable;
 import java.util.Date;
 
 import javax.persistence.Column;
-import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.PrePersist;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
@@ -13,14 +18,21 @@ import javax.persistence.TemporalType;
 
 import javax.validation.constraints.NotNull;
 
-import com.movements.springboot.backend.apirest.models.pks.TaskInformationPK;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 
 @Entity
 @Table(name = "task_informations")
 public class TaskInformation implements Serializable {
-
-	@EmbeddedId
-	private TaskInformationPK taskInformationPK;
+ 
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private Long id;
+	
+	@ManyToOne(fetch=FetchType.LAZY)
+	@JsonIgnoreProperties({"hibernateLazyInitializer", "handler" })
+	@JoinColumn(name= "information_fk")
+	private Information information;
 
 	//@NotNull
 	@Column(name = "create_at")
@@ -40,18 +52,14 @@ public class TaskInformation implements Serializable {
 
 	}
 
-	public TaskInformation(TaskInformationPK taskInformationPK) {
-		this.taskInformationPK = taskInformationPK;
+
+	public Long getId() {
+		return id;
 	}
 
-	public TaskInformation(TaskInformationPK taskInformationPK, String comment, Date doneAt, boolean done) {
-		this.taskInformationPK = taskInformationPK;
-		this.createAt = new Date();
-		this.comment = comment;
-		this.doneAt = doneAt;
-		this.done = done;
+	public void setId(Long id) {
+		this.id = id;
 	}
-
 
 	public Date getCreateAt() {
 		return createAt;
@@ -70,19 +78,11 @@ public class TaskInformation implements Serializable {
 	}
 
 	public Information getInformation() {
-		return taskInformationPK.getInformation();
+		return information;
 	}
 
 	public void setInformation(Information information) {
-		this.taskInformationPK.setInformation(information);
-	}
-
-	public Task getTask() {
-		return taskInformationPK.getTask();
-	}
-
-	public void setTask(Task task) {
-		this.taskInformationPK.setTask(task);
+		this.information = information;
 	}
 
 	@PrePersist
@@ -105,8 +105,6 @@ public class TaskInformation implements Serializable {
 	public void setDone(boolean done) {
 		this.done = done;
 	}
-
-	
 	
 	
 	private static final long serialVersionUID = 1L;

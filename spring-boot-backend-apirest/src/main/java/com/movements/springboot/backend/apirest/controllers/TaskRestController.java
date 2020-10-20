@@ -42,8 +42,6 @@ import com.movements.springboot.backend.apirest.models.entity.Company;
 import com.movements.springboot.backend.apirest.models.entity.Employee;
 import com.movements.springboot.backend.apirest.models.entity.Information;
 import com.movements.springboot.backend.apirest.models.entity.Task;
-import com.movements.springboot.backend.apirest.models.entity.TaskInformation;
-import com.movements.springboot.backend.apirest.models.pks.TaskInformationPK;
 import com.movements.springboot.backend.apirest.models.services.ICompanyService;
 import com.movements.springboot.backend.apirest.models.services.IEmployeeService;
 import com.movements.springboot.backend.apirest.models.services.ITaskService;
@@ -101,7 +99,7 @@ public class TaskRestController {
 
 	@GetMapping("/tasks/page/{page}")
 	public Page<Task> index(@PathVariable Integer page) {
-		Pageable pageable = PageRequest.of(page, 4);
+		Pageable pageable = PageRequest.of(page, 2);
 		return taskService.findAll(pageable);
 	}
 	
@@ -249,95 +247,6 @@ public class TaskRestController {
 		return "/task/form";
 	}
 
-	// @Secured("ROLE_ADMIN")
-	// @PostMapping("/task/form")
-	public String save(@Valid Task task, BindingResult result, Model model,
-			@RequestParam(name = "company.id", required = false) Long idCompany,
-			@RequestParam(name = "company.name", required = false) String nameCompany,
-			@RequestParam(name = "employee.id", required = false) Long idEmployee,
-			@RequestParam(name = "employee.name", required = false) String nameEmployee,
-			@RequestParam(name = "information_id[]", required = false) Long[] informationId,
-			@RequestParam(name = "comment[]", required = false) String[] comment,
-			@RequestParam(name = "information_done[]", required = false) String[] informationDone,
-			RedirectAttributes flash, SessionStatus status) {
-
-		if (result.hasErrors()) {
-			model.addAttribute("title", "Crear tasca");
-			return "/task/form";
-		}
-
-		if (idCompany != null) {
-			Company company = new Company();
-			company = taskService.findCompanyById(idCompany);
-			task.setCompany(company);
-			company.addTask(task);
-		} else {
-			if (!nameCompany.isEmpty()) {
-				result.rejectValue("company.name", "error.user", "L'empresa informada no existeix");
-			} else {
-				task.setCompany(null);
-			}
-		}
-
-		if (idEmployee != null) {
-			Employee employee = new Employee();
-			employee = taskService.findEmployeeById(idEmployee);
-			if (employee.getCompany().getId() == idCompany) {
-				task.setEmployee(employee);
-				employee.addTask(task);
-			} else {
-				result.rejectValue("employee.name", "error.user", "Treballador no pertany a l'empresa informada");
-			}
-
-		} else {
-			if (!nameEmployee.isEmpty()) {
-				result.rejectValue("employee.name", "error.user", "El treballador informat no existeix");
-			} else {
-				task.setEmployee(null);
-			}
-		}
-
-		if (informationId != null) {
-			for (int i = 0; i < informationId.length; i++) {
-
-				Information information = taskService.findInformationById(informationId[i]);
-
-				TaskInformationPK taskInformationPK = new TaskInformationPK(task, information);
-				TaskInformation taskInformation = new TaskInformation(taskInformationPK);
-
-				if (comment.length > 0) {
-					if (!comment[i].isEmpty()) {
-						taskInformation.setComment(comment[i]);
-					}
-				}
-
-				if (informationDone.length > 0) {
-					if (!informationDone[i].isEmpty()) {
-						boolean done = Boolean.parseBoolean(informationDone[i]);
-						taskInformation.setDone(done);
-						if (done) {
-							Date date = new Date();
-							taskInformation.setDoneAt(date);
-						}
-					}
-				}
-
-				task.addTaskInformation(taskInformation);
-			}
-		}
-
-		/*
-		 * if (result.hasErrors()) { model.addAttribute("title", "Crear tasca"); return
-		 * "/task/form"; }
-		 */
-
-		taskService.save(task);
-
-		status.setComplete();
-
-		flash.addFlashAttribute("success", "Tasca creada correctament");
-		return "redirect:/task/list";
-	}
 
 	// @Secured("ROLE_USER")
 	// @RequestMapping(value = { "/information/list" }, method = RequestMethod.GET)

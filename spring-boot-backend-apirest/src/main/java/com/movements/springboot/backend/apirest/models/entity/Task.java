@@ -31,7 +31,6 @@ import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.movements.springboot.backend.apirest.models.enums.TypeCalculationDeadline;
-import com.movements.springboot.backend.apirest.models.pks.TaskInformationPK;
 
 @Entity
 @Table(name = "tasks")
@@ -89,8 +88,9 @@ public class Task implements Serializable {
 	private Company company;
 
 	
-	@OneToMany(mappedBy="taskInformationPK.task", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-	@JsonIgnoreProperties({ "task", "hibernateLazyInitializer", "handler" })
+	@OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+	@JoinColumn(name = "task_fk")
+	@JsonIgnoreProperties({"hibernateLazyInitializer", "handler" })
 	private List<TaskInformation> taskInformations;
 
 	@Column(name = "is_done")
@@ -113,13 +113,9 @@ public class Task implements Serializable {
 
 	@Column(name = "is_maintask")
 	private boolean isMainTask;
-
-	
-	
-	
 	
 	public Task() {
-		taskInformations = new ArrayList<TaskInformation>();
+		taskInformations = new ArrayList<>();
 	}
 
 	public Long getId() {
@@ -291,6 +287,26 @@ public class Task implements Serializable {
 	
 	
 	
+	public void setOptionalSubtask(boolean isOptionalSubtask) {
+		this.isOptionalSubtask = isOptionalSubtask;
+	}
+
+	public void setToSend(boolean isToSend) {
+		this.isToSend = isToSend;
+	}
+
+	public void setTemplate(boolean isTemplate) {
+		this.isTemplate = isTemplate;
+	}
+
+	public void setDone(boolean isDone) {
+		this.isDone = isDone;
+	}
+
+	public void setMainTask(boolean isMainTask) {
+		this.isMainTask = isMainTask;
+	}
+
 	@Override
 	public int hashCode() {
 		final int prime = 31;
