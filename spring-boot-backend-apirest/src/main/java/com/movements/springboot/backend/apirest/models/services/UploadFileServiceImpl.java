@@ -6,6 +6,7 @@ import java.net.MalformedURLException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.text.Normalizer;
 import java.util.UUID;
 
 import org.slf4j.Logger;
@@ -49,8 +50,9 @@ public class UploadFileServiceImpl implements IUploadFileService {
 	
 	@Override
 	public String copy(MultipartFile file) throws IOException {
+		
 
-		String fileName = UUID.randomUUID().toString() + "_" + file.getOriginalFilename().replace(" ", "");
+		String fileName = removeDiacritics(UUID.randomUUID().toString() + "_" + file.getOriginalFilename().replace(" ", ""));
 		
 		Path filePath = getPath(fileName);
 
@@ -83,4 +85,10 @@ public class UploadFileServiceImpl implements IUploadFileService {
 		return Paths.get(UPLOAD_DIRECTORY).resolve(imageName).toAbsolutePath();
 	}
 
+	
+	public static String removeDiacritics(String s) {
+	    s = Normalizer.normalize(s, Normalizer.Form.NFD);
+	    s = s.replaceAll("[\\p{InCombiningDiacriticalMarks}]", "");
+	    return s;
+	}
 }

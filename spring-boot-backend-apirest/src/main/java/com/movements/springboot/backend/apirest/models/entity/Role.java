@@ -18,6 +18,8 @@ import javax.persistence.TemporalType;
 
 import org.springframework.format.annotation.DateTimeFormat;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 @Entity
 @Table(name = "roles")
 public class Role implements Serializable {
@@ -41,6 +43,7 @@ public class Role implements Serializable {
 	 */
 
 	@ManyToMany(mappedBy="roles")
+	@JsonIgnoreProperties(value={"roles", "hibernateLazyInitializer", "handler"}, allowSetters=true)
 	private List<AppUser> users;
 	
 	@Column(name = "create_at")

@@ -2,6 +2,9 @@ package com.movements.springboot.backend.apirest.models.services;
 
 import java.util.List;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+
 import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.EntityGraph.EntityGraphType;
 
@@ -11,6 +14,8 @@ import com.movements.springboot.backend.apirest.models.entity.Employee;
 public interface IEmployeeService {
 	
 	public List<Employee> findAll();
+	
+	public Page<Employee> findAll(Pageable pageable);
 
 	public Employee save(Employee employee);
 

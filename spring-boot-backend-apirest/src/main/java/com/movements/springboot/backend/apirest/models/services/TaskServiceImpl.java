@@ -41,16 +41,13 @@ public class TaskServiceImpl implements ITaskService{
 	}
 
 	
-	
-	
 	@Override
+	@Transactional(readOnly = true)
 	public Page<Task> findAll(Pageable pageable) {
 		return taskDao.findAll(pageable);
 	}
 
-
-
-
+	
 	@Override
 	@Transactional
 	public Task save(Task task) {
@@ -104,6 +101,15 @@ public class TaskServiceImpl implements ITaskService{
 	public List<Information> findAllInformations() {
 		return (List<Information>) informationDao.findAll();
 	}
+
+	
+	
+	@Override
+	@Transactional (readOnly=true)
+	public Page<Information> findAllInformations(Pageable pageable) {
+		return informationDao.findAll(pageable);
+	}
+
 
 	@Override
 	@Transactional

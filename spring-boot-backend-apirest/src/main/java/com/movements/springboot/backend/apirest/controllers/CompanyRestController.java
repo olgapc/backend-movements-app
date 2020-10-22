@@ -77,7 +77,7 @@ public class CompanyRestController {
 	
 	@GetMapping("/companies/page/{page}")
 	public Page<Company> index(@PathVariable Integer page) {
-		Pageable pageable = PageRequest.of(page, 4);
+		Pageable pageable = PageRequest.of(page, 5);
 		return companyService.findAll(pageable);
 	}
 	
@@ -133,7 +133,7 @@ public class CompanyRestController {
 
 		} catch (DataAccessException e) {
 			
-			response.put("message", "Error al realitzar l'inserció a la base de dades!");
+			response.put("message", "Error al realitzar la inserció a la base de dades!");
 			response.put("error", e.getMessage().concat(": ").concat(e.getMostSpecificCause().getMessage()));
 			return new ResponseEntity<Map<String, Object>>(response, HttpStatus.INTERNAL_SERVER_ERROR);
 		

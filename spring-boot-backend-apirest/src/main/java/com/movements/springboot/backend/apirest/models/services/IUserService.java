@@ -2,6 +2,9 @@ package com.movements.springboot.backend.apirest.models.services;
 
 import java.util.List;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+
 import com.movements.springboot.backend.apirest.models.entity.Role;
 import com.movements.springboot.backend.apirest.models.entity.AppUser;
 
@@ -12,6 +15,8 @@ public interface IUserService {
 	public AppUser findByEmail (String email);
 	
 	public List<AppUser> findAll();
+	
+	public Page<AppUser> findAll(Pageable pageable);
 
 	public AppUser save(AppUser user);
 
@@ -19,7 +24,7 @@ public interface IUserService {
 	
 	public void delete(Long id);
 
-	public List<Role> listRoles();
+	public List<Role> findAllRoles();
 	
 	public Role findRoleById(Long id);
 	

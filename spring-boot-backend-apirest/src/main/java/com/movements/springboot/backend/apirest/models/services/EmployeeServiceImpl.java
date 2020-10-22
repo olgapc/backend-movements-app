@@ -2,6 +2,8 @@ package com.movements.springboot.backend.apirest.models.services;
 
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -24,6 +26,13 @@ public class EmployeeServiceImpl implements IEmployeeService {
 	public List<Employee> findAll() {
 		return (List<Employee>) employeeDao.findAll();
 	}
+	
+	@Override
+	@Transactional(readOnly = true)
+	public Page<Employee> findAll(Pageable pageable) {
+		return employeeDao.findAll(pageable);
+	}
+
 
 	@Override
 	@Transactional

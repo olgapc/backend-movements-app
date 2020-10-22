@@ -99,8 +99,15 @@ public class TaskRestController {
 
 	@GetMapping("/tasks/page/{page}")
 	public Page<Task> index(@PathVariable Integer page) {
-		Pageable pageable = PageRequest.of(page, 2);
+		Pageable pageable = PageRequest.of(page, 5);
 		return taskService.findAll(pageable);
+	}
+	
+	// @Secured("ROLE_USER")
+	@GetMapping("/informations/page/{page}")
+	public Page<Information> informationList(@PathVariable Integer page) {
+		Pageable pageable = PageRequest.of(page, 5);
+		return taskService.findAllInformations(pageable);
 	}
 	
 	
@@ -248,13 +255,7 @@ public class TaskRestController {
 	}
 
 
-	// @Secured("ROLE_USER")
-	// @RequestMapping(value = { "/information/list" }, method = RequestMethod.GET)
-	public String listInformation(Model model) {
-		model.addAttribute("title", "Llistat d'informacions");
-		model.addAttribute("informations", taskService.findAllInformations());
-		return "/information/list";
-	}
+
 
 	// @Secured("ROLE_USER")
 	// @GetMapping("/information/view/{idInformation}")

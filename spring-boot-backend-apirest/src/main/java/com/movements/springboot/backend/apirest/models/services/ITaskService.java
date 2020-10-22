@@ -38,6 +38,8 @@ public interface ITaskService {
 		
 		public List<Information> findAllInformations();
 		
+		public Page<Information> findAllInformations(Pageable pageable);
+		
 		public Information saveInformation(Information information);
 		
 		public Task fetchByIdWithEmployeeWithCompanyWithTaskInformationWithInformationWithSubtask(Long id);

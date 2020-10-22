@@ -21,6 +21,8 @@ import javax.persistence.TemporalType;
 
 import org.springframework.format.annotation.DateTimeFormat;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 @Entity
 @Table(name = "users")
 public class AppUser implements Serializable {
@@ -55,6 +57,7 @@ public class AppUser implements Serializable {
 	@JoinTable(name="users_roles", joinColumns = @JoinColumn(name="user_fk"),
 	inverseJoinColumns=@JoinColumn(name="role_fk"),
 	uniqueConstraints = {@UniqueConstraint(columnNames= {"user_fk", "role_fk"})})
+	@JsonIgnoreProperties(value={"users", "hibernateLazyInitializer", "handler"}, allowSetters=true)
 	private List<Role> roles;
 
 	public Long getId() {
