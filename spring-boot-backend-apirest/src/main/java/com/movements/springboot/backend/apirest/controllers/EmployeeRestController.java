@@ -15,12 +15,14 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.annotation.Secured;
 //import org.springframework.security.access.annotation.Secured;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -96,7 +98,7 @@ public class EmployeeRestController {
 		Map<String, Object> response = new HashMap<>();
 		
 		try {
-			employee = employeeService.fetchByIdWithTasksWithCompany(id);
+			employee = employeeService.findById(id);
 			
 		} catch(DataAccessException e) {
 			response.put("message", "Error al realitzar la consulta a la base de dades!");
@@ -114,6 +116,28 @@ public class EmployeeRestController {
 		return new ResponseEntity<Employee>(employee, HttpStatus.OK);
 	}
 
+	@Secured("ROLE_ADMIN")
+	@DeleteMapping("/employees/{id}")
+	public ResponseEntity<?> delete(@PathVariable Long id) {
+		
+		Map<String, Object> response = new HashMap<>();
+
+		try {
+			
+			employeeService.delete(id);
+
+		} catch (DataAccessException e) {
+			response.put("message", "Error al eliminar el treballador de la base de dades!");
+			response.put("error", e.getMessage().concat(": ").concat(e.getMostSpecificCause().getMessage()));
+			return new ResponseEntity<Map<String, Object>>(response, HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+
+		response.put("message", "El treballador s'ha eliminat amb èxit");
+		return new ResponseEntity<Map<String, Object>>(response, HttpStatus.OK);
+	}
+	
+	
+	
 	//@Secured("ROLE_ADMIN")
 	@PostMapping("/employees")
 	@ResponseStatus(HttpStatus.CREATED)
@@ -157,7 +181,7 @@ public class EmployeeRestController {
 		Employee employee = null;
 
 		if (employeeId > 0) {
-			employee = employeeService.findOne(employeeId);
+			employee = employeeService.findById(employeeId);
 
 			if (employee == null) {
 				flash.addFlashAttribute("error", "L'identificador del treballador no existeix a la BdD");

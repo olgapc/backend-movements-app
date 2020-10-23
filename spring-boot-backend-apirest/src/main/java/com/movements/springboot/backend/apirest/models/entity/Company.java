@@ -66,12 +66,12 @@ public class Company implements Serializable {
 
 	
 	@OneToMany(mappedBy = "company", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-	@JsonIgnoreProperties({"company", "hibernateLazyInitializer", "handler"})
+	@JsonIgnoreProperties(value={"company", "hibernateLazyInitializer", "handler", "tasks"}, allowSetters=true)
 	private List<Employee> employees;
 
 	
 	@OneToMany(mappedBy = "company", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-	@JsonIgnoreProperties(value={"company", "hibernateLazyInitializer", "handler"}, allowSetters=true)
+	@JsonIgnoreProperties(value={"company", "hibernateLazyInitializer", "handler", "employees", "subtasks"}, allowSetters=true)
 	private List<Task> tasks;
 
 	@PrePersist

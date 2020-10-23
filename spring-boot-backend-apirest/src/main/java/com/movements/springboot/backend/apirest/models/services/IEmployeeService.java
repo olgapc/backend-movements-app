@@ -19,7 +19,7 @@ public interface IEmployeeService {
 
 	public Employee save(Employee employee);
 
-	public Employee findOne(Long id);
+	public Employee findById(Long id);
 	
 	public Employee fetchByIdWithTasksWithCompany(Long id);
 

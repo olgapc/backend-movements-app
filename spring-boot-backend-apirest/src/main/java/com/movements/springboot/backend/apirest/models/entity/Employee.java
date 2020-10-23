@@ -77,13 +77,13 @@ public class Employee implements Serializable {
 
 	
 	@OneToMany(mappedBy = "employee", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-	@JsonIgnoreProperties({"employee", "hibernateLazyInitializer", "handler"})
+	@JsonIgnoreProperties(value={"employee", "hibernateLazyInitializer", "handler", "company"})
 	private List<Task> tasks;
 	
 	
 	@ManyToOne(fetch = FetchType.LAZY, optional = false, cascade = CascadeType.ALL)
 	@JoinColumn(name = "company_fk")
-	@JsonIgnoreProperties({"employees", "hibernateLazyInitializer", "handler"})
+	@JsonIgnoreProperties(value={"employees", "hibernateLazyInitializer", "handler", "tasks"})
 	private Company company;
 	
 

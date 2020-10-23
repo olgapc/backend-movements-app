@@ -42,7 +42,7 @@ public class EmployeeServiceImpl implements IEmployeeService {
 
 	@Override
 	@Transactional(readOnly = true)
-	public Employee findOne(Long id) {
+	public Employee findById(Long id) {
 		return employeeDao.findById(id).orElse(null);
 	}
 	

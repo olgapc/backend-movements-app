@@ -237,7 +237,7 @@ public class TaskRestController {
 			return "redirect:/task/list";
 		}
 
-		Employee employee = employeeService.findOne(employeeId);
+		Employee employee = employeeService.findById(employeeId);
 		if (employee == null) {
 			flash.addFlashAttribute("error", "El treballador no existeix a la BdD");
 			return "redirect:/task/list";
