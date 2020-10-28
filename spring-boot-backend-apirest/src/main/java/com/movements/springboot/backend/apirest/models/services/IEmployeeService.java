@@ -10,6 +10,7 @@ import org.springframework.data.jpa.repository.EntityGraph.EntityGraphType;
 
 import com.movements.springboot.backend.apirest.models.entity.Company;
 import com.movements.springboot.backend.apirest.models.entity.Employee;
+import com.movements.springboot.backend.apirest.models.enums.NifTypes;
 
 public interface IEmployeeService {
 	
@@ -31,4 +32,5 @@ public interface IEmployeeService {
 	public List<Employee> findEmployeeByCompanyIdAndName(Long id, String term);
 	
 	public Company findCompanyById(Long id);
+	
 }

@@ -15,4 +15,5 @@ public interface IEmployeeDao extends JpaRepository<Employee, Long>{
 	
 	@Query("select e from Employee e left join fetch e.tasks t join fetch e.company where e.id=?1")
 	public Employee fetchByIdWithTasksWithCompany(Long id);
+	
 }

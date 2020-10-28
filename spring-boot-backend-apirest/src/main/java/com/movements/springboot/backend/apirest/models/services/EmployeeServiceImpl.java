@@ -20,6 +20,7 @@ public class EmployeeServiceImpl implements IEmployeeService {
 	
 	@Autowired
 	private ICompanyDao companyDao;
+	
 
 	@Override
 	@Transactional(readOnly = true)
@@ -77,6 +78,7 @@ public class EmployeeServiceImpl implements IEmployeeService {
 	public Company findCompanyById(Long id) {
 		return companyDao.findById(id).orElse(null);
 	}
+
 
 
 

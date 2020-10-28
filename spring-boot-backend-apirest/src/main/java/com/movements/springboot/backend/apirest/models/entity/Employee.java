@@ -8,10 +8,12 @@ import java.util.List;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.Enumerated;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
@@ -21,15 +23,18 @@ import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
 //import javax.validation.constraints.Pattern;
 //import javax.validation.constraints.Size;
 import javax.validation.constraints.Past;
+import javax.validation.constraints.Pattern;
 
 import org.springframework.format.annotation.DateTimeFormat;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.movements.springboot.backend.apirest.models.enums.NifType;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.movements.springboot.backend.apirest.models.enums.NifTypes;
 
 @Entity
 @Table(name = "employees")
@@ -40,15 +45,16 @@ public class Employee implements Serializable {
 	private Long id;
 
 	@Column(name = "employee_name")
-	//@NotEmpty
+	@NotEmpty(message = "no pot estar buit")
 	//@Size(min = 2, max = 50)
 	private String name;
 
 	//@Pattern(regexp = "[X-Y]?[0-9]{8}[A-Z]?")
 	private String nif;
 	
-	@Column(name="nif_type")
-	private NifType nifType;
+	@Column(name="nif_type", nullable = true, length = 8)
+	@Enumerated(EnumType.STRING)
+	private NifTypes nifType;
 
 	//@Pattern(regexp = "[\\d]{1,2}[-][\\d]{7,8}[-][\\d]{2}")
 	private String naf;
@@ -62,7 +68,7 @@ public class Employee implements Serializable {
 	@DateTimeFormat(pattern = "yyyy-MM-dd")
 	private Date birthDate;	
 	
-	@NotEmpty
+
 	private String gender;
 	
 	private Boolean isEnabled;
@@ -81,7 +87,8 @@ public class Employee implements Serializable {
 	private List<Task> tasks;
 	
 	
-	@ManyToOne(fetch = FetchType.LAZY, optional = false, cascade = CascadeType.ALL)
+	@ManyToOne(fetch = FetchType.LAZY, optional = false)
+	@JsonProperty("company")
 	@JoinColumn(name = "company_fk")
 	@JsonIgnoreProperties(value={"employees", "hibernateLazyInitializer", "handler", "tasks"})
 	private Company company;
@@ -89,6 +96,7 @@ public class Employee implements Serializable {
 
 	public Employee() {
 		tasks = new ArrayList<Task>();
+		nifType = nifType.DNI;
 	}
 
 	public Company getCompany() {
@@ -96,9 +104,24 @@ public class Employee implements Serializable {
 	}
 
 	public void setCompany(Company company) {
+		if(sameAsInit(company)) 
+			return ;
+		Company oldCompany = this.company;
 		this.company = company;
+		if (oldCompany!=null) {
+			oldCompany.removeEmployee(this);
+		
+		}
+		if(company!=null) {
+			company.addEmployee(this);
+		}
 	}
 
+	
+	private boolean sameAsInit(Company newCompany) {
+		return company==null? newCompany == null : company.equals(newCompany);
+	}
+	
 	public List<Task> getTasks() {
 		return tasks;
 	}
@@ -131,11 +154,11 @@ public class Employee implements Serializable {
 		this.nif = nif;
 	}
 
-	public NifType getNifType() {
+	public NifTypes getNifType() {
 		return nifType;
 	}
 
-	public void setNifType(NifType nifType) {
+	public void setNifType(NifTypes nifType) {
 		this.nifType = nifType;
 	}
 	

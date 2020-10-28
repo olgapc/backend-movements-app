@@ -28,6 +28,7 @@ import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -44,6 +45,7 @@ import com.movements.springboot.backend.apirest.editors.UpperCaseEditor;
 import com.movements.springboot.backend.apirest.models.entity.Company;
 import com.movements.springboot.backend.apirest.models.entity.Employee;
 import com.movements.springboot.backend.apirest.models.entity.Task;
+import com.movements.springboot.backend.apirest.models.enums.NifTypes;
 import com.movements.springboot.backend.apirest.models.services.ICompanyService;
 import com.movements.springboot.backend.apirest.models.services.IEmployeeService;
 import com.movements.springboot.backend.apirest.validation.EmployeeValidator;
@@ -153,14 +155,17 @@ public class EmployeeRestController {
 					.stream()
 					.map(err-> "El camp '" + err.getField() + "' " + err.getDefaultMessage())
 					.collect(Collectors.toList());
+			
 			response.put("errors", errors);
 			return new ResponseEntity<Map<String, Object>>(response, HttpStatus.BAD_REQUEST);
 		}
 		
 		try {
+			
 			newEmployee = employeeService.save(employee);
 			
 		} catch (DataAccessException e) {
+			
 			response.put("message", "Error al realitzar la inserció a la base de dades!");
 			response.put("error", e.getMessage().concat(": ").concat(e.getMostSpecificCause().getMessage()));
 			return new ResponseEntity<Map<String, Object>>(response, HttpStatus.INTERNAL_SERVER_ERROR);
@@ -168,98 +173,65 @@ public class EmployeeRestController {
 		}		
 
 		response.put("message", "El treballador s'ha creat amb èxit");
-		response.put("company", newEmployee);
+		response.put("employee", newEmployee);
 		return new ResponseEntity<Map<String, Object>>(response, HttpStatus.CREATED);
 	}
 
-	//@Secured("ROLE_ADMIN")
-	@GetMapping("/form/{companyId}/{employeeId}")
-	public String edit(@PathVariable(value = "companyId", required = false) Long companyId,
-			@PathVariable(value = "employeeId", required = false) Long employeeId, Map<String, Object> model,
-			RedirectAttributes flash) {
-
-		Employee employee = null;
-
-		if (employeeId > 0) {
-			employee = employeeService.findById(employeeId);
-
-			if (employee == null) {
-				flash.addFlashAttribute("error", "L'identificador del treballador no existeix a la BdD");
-				return "redirect:/company/view/{companyId}";
-			}
-		} else {
-			flash.addFlashAttribute("error", "L'identificador del treballador no pot ser zero");
-			return "redirect:/company/view/{companyId}";
-		}
-		model.put("employee", employee);
-		model.put("title", "Formulari de Treballador");
-		return "/employee/form";
-	}
-
-	//@Secured("ROLE_ADMIN")
-	@GetMapping(value = "/form")
-	public String create(Map<String, Object> model) {
-		Employee employee = new Employee();
-		employee.setCompany(null);
-		model.put("company", employee.getCompany());
-		employee.setIsEnabled(true);
-		model.put("employee", employee);
-		model.put("title", "Crear treballador");
-		return "/employee/form";
-	}
-
-	//@Secured("ROLE_ADMIN")
-	@RequestMapping(value = "/form", method = RequestMethod.POST)
-	public String save(@Valid Employee employee, BindingResult result,
-			@RequestParam(name = "company.id", required = false) Long companyId, Model model, RedirectAttributes flash,
-			SessionStatus status) {
-
-		// validator.validate(employee, result);
-
-		if (companyId != null) {
-			Company company = new Company();
-			company = employeeService.findCompanyById(companyId);
-
-			employee.setCompany(company);
-
-		} else {
-			employee.setCompany(null);
-			result.rejectValue("company.name", "error.user", "L'empresa informada no existeix");
-		}
-
+	@Secured("ROLE_ADMIN")
+	@PutMapping("/employees/{id}")
+	public ResponseEntity<?> update(@Valid @RequestBody Employee employee, 
+			BindingResult result, @PathVariable Long id){
+		
+		Employee currentEmployee = employeeService.findById(id);
+		Employee updatedEmployee = null;
+		
+		Map<String, Object> response = new HashMap<>();
+		
 		if (result.hasErrors()) {
-			model.addAttribute("title", "Formulari de Treballador");
-			return "/employee/form";
+			
+			List<String> errors = result.getFieldErrors()
+					.stream()
+					.map(err -> "El camp '" + err.getField() + "' " + err.getDefaultMessage())
+					.collect(Collectors.toList());
+			
+			response.put("errors", errors);
+			return new ResponseEntity<Map<String, Object>>(response, HttpStatus.BAD_REQUEST);
 		}
-
-		String flashMessage = (employee.getId() != null) ? "Treballador modificat correctament"
-				: "Treballador creat correctament";
-
-		employeeService.save(employee);
-
-		status.setComplete();
-		flash.addFlashAttribute("success", flashMessage);
-
-		return "redirect:/company/view/" + employee.getCompany().getId();
-	}
-
-	//@Secured("ROLE_USER")
-	@RequestMapping(value = "/list", method = RequestMethod.GET)
-	public String list(Model model) {
-		model.addAttribute("title", "Llistat de treballadors");
-		model.addAttribute("employees", employeeService.findAll());
-		return "/employee/list";
-	}
-
-	//@Secured("ROLE_ADMIN")
-	@RequestMapping(value = "/delete/{companyId}/{employeeId}")
-	public String delete(@PathVariable(value = "companyId", required = false) Long companyId,
-			@PathVariable(value = "employeeId", required = false) Long employeeId, RedirectAttributes flash) {
-		if (employeeId > 0) {
-			employeeService.delete(employeeId);
-			flash.addFlashAttribute("success", "Treballador eliminat correctament");
+		
+		if (employee == null ) {
+			response.put("message", "Error: no s'ha pogut editar, el treballador ID: "
+					.concat(id.toString().concat(" no existeix a la base de dades!")));
+			return new ResponseEntity<Map<String, Object>>(response, HttpStatus.NOT_FOUND);
 		}
-		return "redirect:/company/view/" + companyId;
+		
+		try {
+			
+			currentEmployee.setName(employee.getName());
+			currentEmployee.setBirthDate(employee.getBirthDate());
+			currentEmployee.setComment(employee.getComment());
+			currentEmployee.setCompany(employee.getCompany());
+			currentEmployee.setEmail(employee.getEmail());
+			currentEmployee.setGender(employee.getGender());
+			currentEmployee.setIsEnabled(employee.getIsEnabled());
+			currentEmployee.setNaf(employee.getNaf());
+			currentEmployee.setNif(employee.getNif());
+			currentEmployee.setNifType(employee.getNifType());
+			
+			updatedEmployee = employeeService.save(currentEmployee);
+			
+			
+		} catch (DataAccessException e) {
+			response.put("message", "Error al actualitzar el treballador a la base de dades!");
+			response.put("error", e.getMessage().concat(": ").concat(e.getMostSpecificCause().getMessage()));
+			return new ResponseEntity<Map<String, Object>>(response, HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+		
+		response.put("message", "El treballador s'ha actualitzat amb èxit");
+		response.put("employee", updatedEmployee);
+		return new ResponseEntity<Map<String, Object>>(response, HttpStatus.CREATED);
 	}
+	
+	
 
+	
 }

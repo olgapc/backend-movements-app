@@ -74,13 +74,13 @@ public class Task implements Serializable {
 	@Temporal(TemporalType.TIMESTAMP)
 	private Date createAt;
 
-	//@JsonBackReference("tasks")
+	
 	@ManyToOne(optional = true, fetch = FetchType.LAZY)
 	@JsonIgnoreProperties({ "tasks", "hibernateLazyInitializer", "handler", "company" })
 	@JoinColumn(name = "employee_fk")
 	private Employee employee;
 	
-	//@JsonBackReference("tasks")
+	
 	@JsonProperty("company")
 	@ManyToOne(optional = true, fetch = FetchType.LAZY)
 	@JsonIgnoreProperties({ "tasks", "hibernateLazyInitializer", "handler", "employees" })

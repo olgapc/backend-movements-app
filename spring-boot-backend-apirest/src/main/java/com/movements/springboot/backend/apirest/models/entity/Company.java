@@ -157,19 +157,34 @@ public class Company implements Serializable {
 	}
 
 	public void addEmployee(Employee employee) {
+		if(employees.contains(employee)) 
+		return ;
 		employees.add(employee);
+		employee.setCompany(this);
+	}
+	
+	public void removeEmployee(Employee employee) {
+		if (!employees.contains(employee)) {
+			return;
+		}
+		employees.remove(employee);
+		employee.setCompany(null);
 	}
 
 	public void addTask(Task task) {
+		if (tasks.contains(task)) 
+				return ;
 		tasks.add(task);
+		task.setCompany(this);
 	}
 
+	
+	
 	@Override
 	public String toString() {
 		return name.toUpperCase() + ",\n " + email + ", T. " + phone;
 	}
 
-	
 	
 	
 	@Override

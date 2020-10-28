@@ -25,7 +25,7 @@ public class ResourceServerConfig extends ResourceServerConfigurerAdapter {
 				.permitAll()
 				.antMatchers("/api/companies/{id}").permitAll()
 				.antMatchers("/api/tasks/**").permitAll()
-				.antMatchers("/employee/form/**").permitAll()
+				.antMatchers("/api/employee/form/**").permitAll()
 				.antMatchers("/api/employees/{id}").permitAll()
 				.antMatchers("/api/employees").permitAll()
 				.antMatchers("/api/users").permitAll()

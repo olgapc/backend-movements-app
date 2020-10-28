@@ -148,7 +148,8 @@ public class CompanyRestController {
 	
 	@Secured("ROLE_ADMIN")
 	@PutMapping("/companies/{id}")
-	public ResponseEntity<?> update(@Valid @RequestBody Company company, BindingResult result, @PathVariable Long id) {
+	public ResponseEntity<?> update(@Valid @RequestBody Company company, 
+			BindingResult result, @PathVariable Long id) {
 
 		Company currentCompany = companyService.findById(id);
 		Company updatedCompany = null;
