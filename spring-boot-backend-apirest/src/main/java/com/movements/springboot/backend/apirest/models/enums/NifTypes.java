@@ -4,7 +4,10 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonValue;
+
 
 public enum NifTypes {
 
@@ -25,9 +28,14 @@ public enum NifTypes {
 		return displayValue;
 	}
 	
-	public static List<NifTypes> orderedValues = new ArrayList<>();
-	
-	static {
-		orderedValues.addAll(Arrays.asList(NifTypes.values()));
-	}
+    @Override
+    public String toString() {
+        return displayValue;
+    }
+    
+    @JsonValue
+    public String toJson() {
+    	return displayValue;
+    }
+    
 }
