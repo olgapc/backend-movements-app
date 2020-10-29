@@ -100,13 +100,13 @@ public class Task implements Serializable {
 	@Temporal(TemporalType.TIMESTAMP)
 	private Date doneAt;
 	
-	@ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "maintask_fk")
 	@JsonIgnoreProperties(value = { "subtasks","employee", "company", "hibernateLazyInitializer", "handler", "mainTask"}, allowSetters=true)
 	private Task mainTask;
 
 	
-	@OneToMany(fetch = FetchType.LAZY, mappedBy = "mainTask", cascade = CascadeType.ALL)
+	@OneToMany(fetch = FetchType.LAZY, mappedBy = "mainTask")
 	@JsonIgnoreProperties(value = { "mainTask", "employee", "company", "hibernateLazyInitializer", "handler", "subtasks"}, allowSetters=true)
 	private List<Task> subtasks;
 
