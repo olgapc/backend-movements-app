@@ -76,14 +76,14 @@ public class Task implements Serializable {
 
 	
 	@ManyToOne(optional = true, fetch = FetchType.LAZY)
-	@JsonIgnoreProperties({ "tasks", "hibernateLazyInitializer", "handler", "company" })
+	@JsonIgnoreProperties({ "tasks", "hibernateLazyInitializer", "handler", "company", "createAt" })
 	@JoinColumn(name = "employee_fk")
 	private Employee employee;
 	
 	
 	@JsonProperty("company")
 	@ManyToOne(optional = true, fetch = FetchType.LAZY)
-	@JsonIgnoreProperties({ "tasks", "hibernateLazyInitializer", "handler", "employees" })
+	@JsonIgnoreProperties({ "tasks", "hibernateLazyInitializer", "handler", "employees", "createAt" })
 	@JoinColumn(name = "company_fk")
 	private Company company;
 
@@ -300,10 +300,6 @@ public class Task implements Serializable {
 
 	public void setDone(boolean isDone) {
 		this.isDone = isDone;
-	}
-
-	public void setMainTask(boolean isMainTask) {
-		this.isMainTask = isMainTask;
 	}
 
 	@Override

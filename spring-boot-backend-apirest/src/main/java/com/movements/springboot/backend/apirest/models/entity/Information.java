@@ -31,6 +31,8 @@ public class Information implements Serializable {
 	@NotEmpty
 	@Size(min = 2, max = 250)
 	private String description;
+	
+	private String comment;
 
 	@Column(name = "create_at")
 	@Temporal(TemporalType.TIMESTAMP)
@@ -50,6 +52,16 @@ public class Information implements Serializable {
 
 	public void setDescription(String description) {
 		this.description = description;
+	}
+
+	
+	
+	public String getComment() {
+		return comment;
+	}
+
+	public void setComment(String comment) {
+		this.comment = comment;
 	}
 
 	public Date getCreateAt() {
