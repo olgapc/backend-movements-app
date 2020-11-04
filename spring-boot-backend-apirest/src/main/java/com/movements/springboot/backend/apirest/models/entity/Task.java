@@ -1,6 +1,8 @@
 package com.movements.springboot.backend.apirest.models.entity;
 
 import java.io.Serializable;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -27,7 +29,11 @@ import javax.validation.constraints.NotNull;
 
 import org.springframework.format.annotation.DateTimeFormat;
 
+import java.time.format.DateTimeFormatter;
+
+
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.movements.springboot.backend.apirest.models.enums.TypeCalculationDeadline;
@@ -66,13 +72,16 @@ public class Task implements Serializable {
 	private TypeCalculationDeadline typeCalculationDeadline;
 
 	//@DateTimeFormat(pattern = "yyyy-MM-dd")
-	@NotNull(message="no pot estar buit")
-	@Temporal(TemporalType.DATE)
-	private Date deadline;
+	@Column(name = "deadline", columnDefinition= "DATE")
+	@NotNull(message="no pot estar buit")	
+	//@JsonFormat(pattern = "yyyy-MM-dd")
+	//@Temporal(TemporalType.DATE)
+	private LocalDate deadline;
 
-	@Column(name = "create_at")
-	@Temporal(TemporalType.TIMESTAMP)
-	private Date createAt;
+	@Column(name = "create_at", columnDefinition= "TIMESTAMP")
+	//@JsonFormat(pattern = "yyyy-MM-dd HH:mm")
+	//@Temporal(TemporalType.TIMESTAMP)
+	private LocalDateTime createAt;
 
 	
 	@ManyToOne(optional = true, fetch = FetchType.LAZY)
@@ -96,9 +105,9 @@ public class Task implements Serializable {
 	@Column(name = "is_done")
 	private boolean isDone;
 
-	@Column(name = "done_at")
-	@Temporal(TemporalType.TIMESTAMP)
-	private Date doneAt;
+	@Column(name = "done_at", columnDefinition= "TIMESTAMP")
+	//@Temporal(TemporalType.TIMESTAMP)
+	private LocalDateTime doneAt;
 	
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "maintask_fk")
@@ -177,19 +186,19 @@ public class Task implements Serializable {
 		this.typeCalculationDeadline = typeCalculationDeadline;
 	}
 
-	public Date getDeadline() {
+	public LocalDate getDeadline() {
 		return deadline;
 	}
 
-	public void setDeadline(Date deadline) {
+	public void setDeadline(LocalDate deadline) {
 		this.deadline = deadline;
 	}
 
-	public Date getCreateAt() {
+	public LocalDateTime getCreateAt() {
 		return createAt;
 	}
 
-	public void setCreateAt(Date createAt) {
+	public void setCreateAt(LocalDateTime createAt) {
 		this.createAt = createAt;
 	}
 
@@ -224,14 +233,14 @@ public class Task implements Serializable {
 
 	@PrePersist
 	public void prePersist() {
-		createAt = new Date();
+		createAt = LocalDateTime.now();
 	}
 
-	public Date getDoneAt() {
+	public LocalDateTime getDoneAt() {
 		return doneAt;
 	}
 
-	public void setDoneAt(Date doneAt) {
+	public void setDoneAt(LocalDateTime doneAt) {
 		this.doneAt = doneAt;
 	}
 

@@ -1,5 +1,6 @@
 package com.movements.springboot.backend.apirest.controllers;
 
+import java.io.Console;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -123,6 +124,7 @@ public class TaskRestController {
 	@ResponseStatus(HttpStatus.CREATED)
 	public ResponseEntity<?> create(@Valid @RequestBody Task task, BindingResult result) {
 
+		System.out.println(task.getDeadline());
 		Task newTask = null;
 
 		Map<String, Object> response = new HashMap<>();
