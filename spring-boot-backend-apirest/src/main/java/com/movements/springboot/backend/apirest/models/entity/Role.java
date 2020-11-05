@@ -1,7 +1,8 @@
 package com.movements.springboot.backend.apirest.models.entity;
 
 import java.io.Serializable;
-import java.util.Date;
+import java.time.LocalDateTime;
+//import java.util.Date;
 import java.util.List;
 
 import javax.persistence.Column;
@@ -13,10 +14,10 @@ import javax.persistence.Id;
 import javax.persistence.ManyToMany;
 import javax.persistence.PrePersist;
 import javax.persistence.Table;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
+//import javax.persistence.Temporal;
+//import javax.persistence.TemporalType;
 
-import org.springframework.format.annotation.DateTimeFormat;
+//import org.springframework.format.annotation.DateTimeFormat;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
@@ -46,16 +47,16 @@ public class Role implements Serializable {
 	@JsonIgnoreProperties(value={"roles", "hibernateLazyInitializer", "handler"}, allowSetters=true)
 	private List<AppUser> users;
 	
-	@Column(name = "create_at")
-	@Temporal(TemporalType.TIMESTAMP)
-	@DateTimeFormat(pattern = "dd/MM/yyyy hh:mm:ss")
-	private Date createAt;
+	@Column(name = "create_at", columnDefinition= "TIMESTAMP")
+	//@Temporal(TemporalType.TIMESTAMP)
+	//@DateTimeFormat(pattern = "dd/MM/yyyy hh:mm:ss")
+	private LocalDateTime createAt;
 
 	public Role() {
 
 	}
 
-	public Role(String description, String role, Date createAt) {
+	public Role(String description, String role, LocalDateTime createAt) {
 		this.description = description;
 		this.role = role;
 		this.createAt = createAt;
@@ -85,8 +86,6 @@ public class Role implements Serializable {
 		this.role = role;
 	}
 	
-	
-
 	public List<AppUser> getUsers() {
 		return users;
 	}
@@ -95,17 +94,17 @@ public class Role implements Serializable {
 		this.users = users;
 	}
 
-	public Date getCreateAt() {
+	public LocalDateTime getCreateAt() {
 		return createAt;
 	}
 
-	public void setCreateAt(Date createAt) {
+	public void setCreateAt(LocalDateTime createAt) {
 		this.createAt = createAt;
 	}
 
 	@PrePersist
 	public void prePersist() {
-		createAt = new Date();
+		createAt = LocalDateTime.now();
 	}
 
 	private static final long serialVersionUID = 1L;

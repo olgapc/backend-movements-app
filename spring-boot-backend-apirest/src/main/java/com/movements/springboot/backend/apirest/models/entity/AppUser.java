@@ -1,7 +1,8 @@
 package com.movements.springboot.backend.apirest.models.entity;
 
 import java.io.Serializable;
-import java.util.Date;
+import java.time.LocalDateTime;
+//import java.util.Date;
 import java.util.List;
 
 import javax.persistence.CascadeType;
@@ -14,12 +15,13 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
+import javax.persistence.PrePersist;
 import javax.persistence.UniqueConstraint;
 import javax.persistence.Table;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
+//import javax.persistence.Temporal;
+//import javax.persistence.TemporalType;
 
-import org.springframework.format.annotation.DateTimeFormat;
+//import org.springframework.format.annotation.DateTimeFormat;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
@@ -48,10 +50,10 @@ public class AppUser implements Serializable {
 
 	private Boolean enabled;
 
-	@Column(name = "create_at")
-	@Temporal(TemporalType.TIMESTAMP)
-	@DateTimeFormat(pattern = "dd/MM/yyyy hh:mm:ss")
-	private Date createAt;
+	@Column(name = "create_at", columnDefinition= "TIMESTAMP")
+	//@Temporal(TemporalType.TIMESTAMP)
+	//@DateTimeFormat(pattern = "dd/MM/yyyy hh:mm:ss")
+	private LocalDateTime createAt;
 
 	@ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
 	@JoinTable(name="users_roles", joinColumns = @JoinColumn(name="user_fk"),
@@ -117,14 +119,19 @@ public class AppUser implements Serializable {
 		this.enabled = enabled;
 	}
 
-	public Date getCreateAt() {
+	public LocalDateTime getCreateAt() {
 		return createAt;
 	}
 
-	public void setCreateAt(Date createAt) {
+	public void setCreateAt(LocalDateTime createAt) {
 		this.createAt = createAt;
 	}
-
+	
+	@PrePersist
+	public void prePersist() {
+		createAt = LocalDateTime.now();
+	}
+	
 	public List<Role> getRoles() {
 		return roles;
 	}

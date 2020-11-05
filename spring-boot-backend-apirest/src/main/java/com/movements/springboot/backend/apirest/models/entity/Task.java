@@ -4,7 +4,7 @@ import java.io.Serializable;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.Date;
+//import java.util.Date;
 import java.util.List;
 
 import javax.persistence.CascadeType;
@@ -21,19 +21,19 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.PrePersist;
 import javax.persistence.Table;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
-import javax.validation.constraints.FutureOrPresent;
+//import javax.persistence.Temporal;
+//import javax.persistence.TemporalType;
+//import javax.validation.constraints.FutureOrPresent;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 
-import org.springframework.format.annotation.DateTimeFormat;
+//import org.springframework.format.annotation.DateTimeFormat;
 
-import java.time.format.DateTimeFormatter;
+//import java.time.format.DateTimeFormatter;
 
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonFormat;
+//import com.fasterxml.jackson.annotation.JsonBackReference;
+//import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.movements.springboot.backend.apirest.models.enums.TypeCalculationDeadline;
@@ -105,7 +105,7 @@ public class Task implements Serializable {
 	@Column(name = "is_done")
 	private boolean isDone;
 
-	@Column(name = "done_at", columnDefinition= "TIMESTAMP")
+	@Column(name = "done_at")
 	//@Temporal(TemporalType.TIMESTAMP)
 	private LocalDateTime doneAt;
 	
