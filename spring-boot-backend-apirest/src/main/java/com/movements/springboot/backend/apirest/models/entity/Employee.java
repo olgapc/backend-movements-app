@@ -36,6 +36,7 @@ import javax.validation.constraints.Past;
 //import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.movements.springboot.backend.apirest.models.enums.Gender;
 import com.movements.springboot.backend.apirest.models.enums.NifTypes;
 
 @Entity
@@ -71,8 +72,8 @@ public class Employee implements Serializable {
 	//@DateTimeFormat(pattern = "yyyy-MM-dd")
 	private LocalDate birthDate;	
 	
-
-	private String gender;
+	@Enumerated(EnumType.STRING)
+	private Gender gender;
 	
 	private Boolean isEnabled;
 	
@@ -100,6 +101,7 @@ public class Employee implements Serializable {
 	public Employee() {
 		tasks = new ArrayList<Task>();
 		nifType = nifType.DNI;
+		
 	}
 
 	public Company getCompany() {
@@ -198,11 +200,11 @@ public class Employee implements Serializable {
 		this.birthDate = birthDate;
 	}
 
-	public String getGender() {
+	public Gender getGender() {
 		return gender;
 	}
 
-	public void setGender(String gender) {
+	public void setGender(Gender gender) {
 		this.gender = gender;
 	}
 	
