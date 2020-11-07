@@ -27,6 +27,8 @@ import javax.persistence.Table;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+
 //import org.springframework.format.annotation.DateTimeFormat;
 
 //import java.time.format.DateTimeFormatter;
@@ -36,7 +38,7 @@ import javax.validation.constraints.NotNull;
 //import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.movements.springboot.backend.apirest.models.enums.TypeCalculationDeadline;
+import com.movements.springboot.backend.apirest.models.enums.TimesType;
 
 @Entity
 @Table(name = "tasks")
@@ -67,9 +69,9 @@ public class Task implements Serializable {
 	//@Column(name = "days_to_fix_error")
 	//private Integer daysToFixError;
 
-	@Enumerated(value = EnumType.STRING)
 	@Column(name = "type_calculation_deadline")
-	private TypeCalculationDeadline typeCalculationDeadline;
+	@Enumerated(EnumType.STRING)
+	private TimesType typeCalculationDeadline;
 
 	//@DateTimeFormat(pattern = "yyyy-MM-dd")
 	@Column(name = "deadline", columnDefinition= "DATE")
@@ -79,7 +81,7 @@ public class Task implements Serializable {
 	private LocalDate deadline;
 
 	@Column(name = "create_at", columnDefinition= "TIMESTAMP")
-	//@JsonFormat(pattern = "yyyy-MM-dd HH:mm")
+	
 	//@Temporal(TemporalType.TIMESTAMP)
 	private LocalDateTime createAt;
 
@@ -106,6 +108,7 @@ public class Task implements Serializable {
 	private boolean isDone;
 
 	@Column(name = "done_at")
+	@JsonFormat(shape=JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
 	//@Temporal(TemporalType.TIMESTAMP)
 	private LocalDateTime doneAt;
 	
@@ -124,6 +127,7 @@ public class Task implements Serializable {
 	
 	public Task() {
 		taskInformations = new ArrayList<>();
+		subtasks = new ArrayList<>();
 	}
 
 	public Long getId() {
@@ -146,11 +150,11 @@ public class Task implements Serializable {
 		return isOptionalSubtask;
 	}
 
-	public boolean isToSend() {
+	public boolean getIsToSend() {
 		return isToSend;
 	}
 
-	public boolean isTemplate() {
+	public boolean getIsTemplate() {
 		return isTemplate;
 	}
 
@@ -178,11 +182,11 @@ public class Task implements Serializable {
 	//	this.daysToFixError = daysToFixError;
 	//}
 
-	public TypeCalculationDeadline getTypeCalculationDeadline() {
+	public TimesType getTypeCalculationDeadline() {
 		return typeCalculationDeadline;
 	}
 
-	public void setTypeCalculationDeadline(TypeCalculationDeadline typeCalculationDeadline) {
+	public void setTypeCalculationDeadline(TimesType typeCalculationDeadline) {
 		this.typeCalculationDeadline = typeCalculationDeadline;
 	}
 
@@ -276,7 +280,7 @@ public class Task implements Serializable {
 		subtasks.add(subtask);
 	}
 
-	public boolean isDone() {
+	public boolean getIsDone() {
 		return isDone;
 	}
 
@@ -284,7 +288,7 @@ public class Task implements Serializable {
 		this.isDone = isDone;
 	}
 
-	public boolean isMainTask() {
+	public boolean getIsMainTask() {
 		return isMainTask;
 	}
 
@@ -292,24 +296,11 @@ public class Task implements Serializable {
 		this.isMainTask = isMainTask;
 	}
 
-	
-	
-	
-	public void setOptionalSubtask(boolean isOptionalSubtask) {
-		this.isOptionalSubtask = isOptionalSubtask;
-	}
 
-	public void setToSend(boolean isToSend) {
-		this.isToSend = isToSend;
-	}
 
-	public void setTemplate(boolean isTemplate) {
-		this.isTemplate = isTemplate;
-	}
 
-	public void setDone(boolean isDone) {
-		this.isDone = isDone;
-	}
+
+
 
 	@Override
 	public int hashCode() {

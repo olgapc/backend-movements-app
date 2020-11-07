@@ -76,4 +76,4 @@ INSERT INTO tasks (description, is_optional_subtask, is_to_send, is_template, te
 INSERT INTO tasks (description, is_optional_subtask, is_to_send, is_template, template_name, number_to_calculate_deadline_to_alarm, type_calculation_deadline, deadline, create_at, company_fk, employee_fk, is_done, is_maintask, maintask_fk) VALUES ('Primera subtasca de plantilla', 1, 1, 1, 'Plantilla', 2, 'DAILY', '2020-12-31', NOW(), 3, 1, 0, 0, 3);
 /* POPULATE TASK_INFORMATIONS */
 INSERT INTO task_informations (information_fk, task_fk, create_at, comment, done) VALUES ('1', '1', NOW(), 'primera tasca amb coses a fer', 0);
-INSERT INTO task_informations (information_fk, task_fk, create_at, comment, done, done_at) VALUES ('2', '1', NOW(), 'primera tasca amb coses a fer', 1, NOW());
+INSERT INTO task_informations (information_fk, task_fk, create_at, comment, done) VALUES ('2', '1', NOW(), 'primera tasca amb coses a fer', 0);

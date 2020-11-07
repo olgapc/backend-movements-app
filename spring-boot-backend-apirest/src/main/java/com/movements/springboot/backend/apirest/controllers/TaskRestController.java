@@ -187,8 +187,8 @@ public class TaskRestController {
 
 			currentTask.setDescription(task.getDescription());
 			currentTask.setIsOptionalSubtask(task.isOptionalSubtask());
-			currentTask.setIsToSend(task.isToSend());
-			currentTask.setIsTemplate(task.isTemplate());
+			currentTask.setIsToSend(task.getIsToSend());
+			currentTask.setIsTemplate(task.getIsTemplate());
 			currentTask.setTemplateName(task.getTemplateName());
 			currentTask.setNumberToCalculateDeadlineToAlarm(task.getNumberToCalculateDeadlineToAlarm());
 			currentTask.setTypeCalculationDeadline(task.getTypeCalculationDeadline());
@@ -197,9 +197,9 @@ public class TaskRestController {
 			currentTask.setCompany(task.getCompany());
 			
 			
-			currentTask.setIsDone(task.isDone());
+			currentTask.setIsDone(task.getIsDone());
 			currentTask.setMainTask(task.getMainTask());
-			currentTask.setIsMainTask(task.isMainTask());
+			currentTask.setIsMainTask(task.getIsMainTask());
 
 
 

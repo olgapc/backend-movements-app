@@ -17,6 +17,8 @@ import javax.persistence.Table;
 //import javax.persistence.Temporal;
 //import javax.persistence.TemporalType;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+
 //import javax.validation.constraints.NotNull;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
@@ -41,7 +43,8 @@ public class TaskInformation implements Serializable {
 	private LocalDateTime createAt;
 
 	private String comment;
-		
+	
+	@JsonFormat(shape=JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
 	@Column(name = "done_at")
 	//@Temporal(TemporalType.TIMESTAMP)
 	private LocalDateTime doneAt;

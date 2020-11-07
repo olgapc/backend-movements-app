@@ -12,30 +12,15 @@ import com.fasterxml.jackson.annotation.JsonValue;
 public enum NifTypes {
 
 	
-	DNI("DNI"),
+	DNI,
 	
-	NIE("NIE"), 
+	NIE, 
 	
-	PASSPORT("Passaport");
+	PASSPORT;
 
-	private final String displayValue;
+	NifTypes() {
+		
+	}
 
-	NifTypes(String displayValue) {
-		this.displayValue = displayValue;
-	}
-	
-	public String getDisplayValue() {
-		return displayValue;
-	}
-	
-    @Override
-    public String toString() {
-        return displayValue;
-    }
-    
-    @JsonValue
-    public String toJson() {
-    	return displayValue;
-    }
     
 }
