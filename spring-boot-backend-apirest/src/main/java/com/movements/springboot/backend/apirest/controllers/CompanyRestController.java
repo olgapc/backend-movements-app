@@ -21,6 +21,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.annotation.Secured;
+import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -36,11 +37,13 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.movements.springboot.backend.apirest.editors.CompanyTypeEditor;
 import com.movements.springboot.backend.apirest.editors.LowerCaseEditor;
 import com.movements.springboot.backend.apirest.editors.PascalCaseEditor;
 import com.movements.springboot.backend.apirest.models.entity.CompanyType;
+import com.movements.springboot.backend.apirest.models.entity.Information;
 import com.movements.springboot.backend.apirest.models.entity.Company;
 import com.movements.springboot.backend.apirest.models.services.ICompanyService;
 import com.movements.springboot.backend.apirest.models.services.IUploadFileService;
@@ -289,4 +292,135 @@ public class CompanyRestController {
 		
 		return companyService.findAllCompanyTypes();
 	}
+	
+	@Secured("ROLE_ADMIN")
+	@GetMapping("/company_types/page/{page}")
+	public Page<CompanyType> companyTypesList(@PathVariable Integer page){
+		Pageable pageable = PageRequest.of(page, 5);
+		return companyService.findAllCompanyTypes(pageable);
+	}
+	
+
+
+	// @Secured("ROLE_ADMIN")
+	@GetMapping("/company_types/{idCompanyType}")
+	@ResponseStatus(HttpStatus.OK)
+	public CompanyType showInformation(@PathVariable(value = "idCompanyType") Long idCompanyType, Model model, RedirectAttributes flash) {
+
+		return companyService.findCompanyTypeById(idCompanyType);
+	}
+
+	
+	@Secured("ROLE_ADMIN")
+	@PostMapping("/company_types")
+	@ResponseStatus(HttpStatus.CREATED)
+	public ResponseEntity<?> createCompanyType (@Valid @RequestBody CompanyType companyType, BindingResult result) {
+
+		CompanyType newCompanyType = null;
+		
+		Map<String, Object> response = new HashMap<>();
+
+		if (result.hasErrors()) {
+
+			List<String> errors = result.getFieldErrors()
+					.stream()
+					.map(err -> "El camp '" + err.getField() + "' " + err.getDefaultMessage()) 
+					.collect(Collectors.toList());
+
+			response.put("errors", errors);
+			return new ResponseEntity<Map<String, Object>>(response, HttpStatus.BAD_REQUEST);
+		}
+
+		try {
+
+			newCompanyType = companyService.saveCompanyType(companyType);
+
+		} catch (DataAccessException e) {
+			
+			response.put("message", "Error al realitzar la inserció a la base de dades!");
+			response.put("error", e.getMessage().concat(": ").concat(e.getMostSpecificCause().getMessage()));
+			return new ResponseEntity<Map<String, Object>>(response, HttpStatus.INTERNAL_SERVER_ERROR);
+		
+		}
+
+		response.put("message", "La informació s'ha creat amb èxit");
+		response.put("companyType", newCompanyType);
+		return new ResponseEntity<Map<String, Object>>(response, HttpStatus.CREATED);
+
+	}
+
+	
+	@Secured("ROLE_ADMIN")
+	@PutMapping("/company_types/{id}")
+	public ResponseEntity<?> updateCompanyType(@Valid @RequestBody CompanyType companyType, 
+			BindingResult result, @PathVariable Long id) {
+
+		CompanyType currentCompanyType = companyService.findCompanyTypeById(id);
+		CompanyType updatedCompanyType = null;
+
+		Map<String, Object> response = new HashMap<>();
+
+		if (result.hasErrors()) {
+
+			List<String> errors = result.getFieldErrors()
+					.stream()
+					.map(err -> "El camp '" + err.getField() + "' " + err.getDefaultMessage())
+					.collect(Collectors.toList());
+
+			response.put("errors", errors);
+			return new ResponseEntity<Map<String, Object>>(response, HttpStatus.BAD_REQUEST);
+		}
+		
+		if (companyType == null) {
+			response.put("message", "Error: no s'ha pogut editar, la informació ID: "
+					.concat(id.toString().concat(" no existeix a la base de dades!")));
+			return new ResponseEntity<Map<String, Object>>(response, HttpStatus.NOT_FOUND);
+		}
+
+		try {
+
+			currentCompanyType.setCode(companyType.getCode());
+			currentCompanyType.setDescription(companyType.getDescription());
+
+			updatedCompanyType = companyService.saveCompanyType(updatedCompanyType);
+
+		} catch (DataAccessException e) {
+			response.put("message", "Error al actualitzar la informació a la base de dades!");
+			response.put("error", e.getMessage().concat(": ").concat(e.getMostSpecificCause().getMessage()));
+			return new ResponseEntity<Map<String, Object>>(response, HttpStatus.INTERNAL_SERVER_ERROR);
+
+		}
+
+		response.put("message", "El tipus d'empresa s'ha actualitzat amb èxit");
+		response.put("companyType", updatedCompanyType);
+		return new ResponseEntity<Map<String, Object>>(response, HttpStatus.CREATED);
+
+	}
+	
+	
+	// @Secured("ROLE_ADMIN")
+	@DeleteMapping("/company_types/{id}")
+	public ResponseEntity<?> deleteCompanyType(@PathVariable Long id) {
+		
+		Map<String, Object> response = new HashMap<>();
+
+		
+		try {
+			
+			companyService.deleteCompanyType(id);
+
+		} catch (DataAccessException e) {
+
+			response.put("message", "Error al esborrar tipus d'empresa!");
+			response.put("error", e.getMessage().concat(": ").concat(e.getMostSpecificCause().getMessage()));
+			return new ResponseEntity<Map<String, Object>>(response, HttpStatus.INTERNAL_SERVER_ERROR);
+
+		}
+
+		response.put("message", "El tipus d'empresa s'ha esborrat amb èxit");
+		return new ResponseEntity<Map<String, Object>>(response, HttpStatus.OK);
+		
+
+	}
+	
 }

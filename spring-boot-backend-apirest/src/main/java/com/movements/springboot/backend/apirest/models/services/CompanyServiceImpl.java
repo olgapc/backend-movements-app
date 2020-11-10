@@ -11,6 +11,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.movements.springboot.backend.apirest.models.dao.ICompanyTypeDao;
 import com.movements.springboot.backend.apirest.models.entity.CompanyType;
+import com.movements.springboot.backend.apirest.models.entity.Information;
 import com.movements.springboot.backend.apirest.models.dao.ICompanyDao;
 import com.movements.springboot.backend.apirest.models.entity.Company;
 
@@ -71,6 +72,14 @@ public class CompanyServiceImpl implements ICompanyService{
 	public List<CompanyType> findAllCompanyTypes() {
 		return (List<CompanyType>) companyTypeDao.findAll();
 	}
+	
+	
+
+	@Override
+	@Transactional(readOnly = true)
+	public Page<CompanyType> findAllCompanyTypes(Pageable pageable) {
+		return companyTypeDao.findAll(pageable);
+	}
 
 	@Override
 	@Transactional(readOnly = true)
@@ -78,7 +87,18 @@ public class CompanyServiceImpl implements ICompanyService{
 		return companyTypeDao.findById(id).orElse(null);
 	}
 
-	
+	@Override
+	@Transactional
+	public CompanyType saveCompanyType(CompanyType companyType) {
+		return companyTypeDao.save(companyType);
+	}
+
+	@Override
+	@Transactional
+	public void deleteCompanyType(Long id) {
+		companyTypeDao.deleteById(id);
+		
+	}
 	
 	
 }

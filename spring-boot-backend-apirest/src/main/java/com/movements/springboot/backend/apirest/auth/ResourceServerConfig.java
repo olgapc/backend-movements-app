@@ -30,6 +30,8 @@ public class ResourceServerConfig extends ResourceServerConfigurerAdapter {
 				.antMatchers("/api/employees").permitAll()
 				.antMatchers("/api/users").permitAll()
 				.antMatchers("/api/users/**").permitAll()
+				.antMatchers("/api/roles").permitAll()
+				.antMatchers("/api/company_types").permitAll()
 				/*
 				 * .antMatchers(HttpMethod.GET, "/api/companies/{id}").hasAnyRole("USER",
 				 * "ADMIN") .antMatchers(HttpMethod.GET,

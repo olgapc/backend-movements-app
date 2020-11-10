@@ -79,7 +79,7 @@ public class UserRestController {
 	@Secured("ROLE_ADMIN")
 	@GetMapping("/roles")
 	public List<Role> rolesList() {
-		return this.userService.findAllRoles();
+		return userService.findAllRoles();
 	}
 	
 	
@@ -108,7 +108,7 @@ public class UserRestController {
 
 	}
 	
-	@Secured("ROLE_ADMIN")
+	//@Secured("ROLE_ADMIN")
 	@PostMapping("/users")
 	@ResponseStatus(HttpStatus.CREATED)
 	public ResponseEntity<?> create(@Valid @RequestBody AppUser user, BindingResult result) {
@@ -130,7 +130,7 @@ public class UserRestController {
 
 		try {
 
-			newUser =userService.save(user);
+			newUser = userService.save(user);
 
 		} catch (DataAccessException e) {
 			

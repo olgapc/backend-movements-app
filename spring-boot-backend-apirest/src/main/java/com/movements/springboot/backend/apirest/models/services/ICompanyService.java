@@ -24,9 +24,15 @@ public interface ICompanyService {
 	
 	public List<Company> findCompanyByName(String term);
 
-	
 	public CompanyType findCompanyTypeById(Long id);
 	
 	public List<CompanyType> findAllCompanyTypes();
+	
+	public Page<CompanyType> findAllCompanyTypes(Pageable pageable);
+	
+	public CompanyType saveCompanyType(CompanyType companyType);
+	
+	public void deleteCompanyType(Long id);
+	
 
 }
