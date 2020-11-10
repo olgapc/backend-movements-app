@@ -284,8 +284,8 @@ public class CompanyRestController {
 	
 	
 	@Secured("ROLE_ADMIN")
-	@GetMapping("/companies/company_types")
-	public List<CompanyType> listCompanyTypes(){
+	@GetMapping("/company_types")
+	public List<CompanyType> companyTypesList(){
 		
 		return companyService.findAllCompanyTypes();
 	}

@@ -55,7 +55,7 @@ public class AppUser implements Serializable {
 	//@DateTimeFormat(pattern = "dd/MM/yyyy hh:mm:ss")
 	private LocalDateTime createAt;
 
-	@ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+	@ManyToMany(fetch = FetchType.LAZY)
 	@JoinTable(name="users_roles", joinColumns = @JoinColumn(name="user_fk"),
 	inverseJoinColumns=@JoinColumn(name="role_fk"),
 	uniqueConstraints = {@UniqueConstraint(columnNames= {"user_fk", "role_fk"})})
