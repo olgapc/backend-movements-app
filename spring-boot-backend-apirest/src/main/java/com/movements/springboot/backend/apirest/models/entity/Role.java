@@ -2,23 +2,15 @@ package com.movements.springboot.backend.apirest.models.entity;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
-//import java.util.Date;
 import java.util.List;
-
 import javax.persistence.Column;
 import javax.persistence.Entity;
-
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToMany;
 import javax.persistence.PrePersist;
 import javax.persistence.Table;
-//import javax.persistence.Temporal;
-//import javax.persistence.TemporalType;
-
-//import org.springframework.format.annotation.DateTimeFormat;
-
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 @Entity
@@ -34,22 +26,13 @@ public class Role implements Serializable {
 	@Column(unique = true, length = 20)
 	private String role;
 
-	/*
-	 * @ManyToMany
-	 * 
-	 * @JoinTable( name = "roles_privileges", joinColumns = @JoinColumn( name =
-	 * "role_id", referencedColumnName = "id"), inverseJoinColumns = @JoinColumn(
-	 * name = "privilege_id", referencedColumnName = "id")) private
-	 * Collection<Privilege> privileges;
-	 */
-
-	@ManyToMany(mappedBy="roles")
-	@JsonIgnoreProperties(value={"roles", "hibernateLazyInitializer", "handler"}, allowSetters=true)
+	@ManyToMany(mappedBy = "roles")
+	@JsonIgnoreProperties(value = { "roles", "hibernateLazyInitializer", "handler" }, allowSetters = true)
 	private List<AppUser> users;
-	
-	@Column(name = "create_at", columnDefinition= "TIMESTAMP")
-	//@Temporal(TemporalType.TIMESTAMP)
-	//@DateTimeFormat(pattern = "dd/MM/yyyy hh:mm:ss")
+
+	private String comment;
+
+	@Column(name = "create_at", columnDefinition = "TIMESTAMP")
 	private LocalDateTime createAt;
 
 	public Role() {
@@ -85,13 +68,21 @@ public class Role implements Serializable {
 	public void setRole(String role) {
 		this.role = role;
 	}
-	
+
 	public List<AppUser> getUsers() {
 		return users;
 	}
 
 	public void setUsers(List<AppUser> users) {
 		this.users = users;
+	}
+
+	public String getComment() {
+		return comment;
+	}
+
+	public void setComment(String comment) {
+		this.comment = comment;
 	}
 
 	public LocalDateTime getCreateAt() {

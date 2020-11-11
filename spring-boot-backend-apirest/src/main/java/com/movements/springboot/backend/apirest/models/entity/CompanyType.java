@@ -2,7 +2,6 @@ package com.movements.springboot.backend.apirest.models.entity;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
-
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -26,7 +25,6 @@ public class CompanyType implements Serializable {
 	private String comment;
 
 	@Column(name = "create_at", columnDefinition = "TIMESTAMP")
-	// @Temporal(TemporalType.TIMESTAMP)
 	private LocalDateTime createAt;
 
 	public CompanyType() {

@@ -3,9 +3,7 @@ package com.movements.springboot.backend.apirest.models.entity;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
-//import java.util.Date;
 import java.util.List;
-
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -17,18 +15,11 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.PrePersist;
-//import javax.persistence.PrePersist;
 import javax.persistence.Table;
-//import javax.persistence.Temporal;
-//import javax.persistence.TemporalType;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
-
-//import org.springframework.format.annotation.DateTimeFormat;
-
-//import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 @Entity
@@ -51,29 +42,28 @@ public class Company implements Serializable {
 	@NotEmpty(message = "no pot estar buit") // notEmpty només per Strings, pels demés tipus notnull
 	private String phone;
 
-	@Column(name = "create_at", columnDefinition= "TIMESTAMP")
-	//@Temporal(TemporalType.TIMESTAMP)
-	//@DateTimeFormat(pattern = "dd/MM/yyyy hh:mm:ss")
+	@Column(name = "create_at", columnDefinition = "TIMESTAMP")
 	private LocalDateTime createAt;
 
 	private String image;
 
-	
 	@ManyToOne(fetch = FetchType.LAZY)
-	@NotNull (message="no pot estar buit")
+	@NotNull(message = "no pot estar buit")
 	@JoinColumn(name = "company_type_fk")
-	@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
+	@JsonIgnoreProperties({ "hibernateLazyInitializer", "handler" })
 	private CompanyType companyType;
 
-	
 	@OneToMany(mappedBy = "company", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-	@JsonIgnoreProperties(value={"company", "hibernateLazyInitializer", "handler", "tasks", "subtasks", "mainTask"}, allowSetters=true)
+	@JsonIgnoreProperties(value = { "company", "hibernateLazyInitializer", "handler", "tasks", "subtasks",
+			"mainTask" }, allowSetters = true)
 	private List<Employee> employees;
 
-	
 	@OneToMany(mappedBy = "company", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-	@JsonIgnoreProperties(value={"company", "hibernateLazyInitializer", "handler", "employee", "subtasks", "mainTask"}, allowSetters=true)
+	@JsonIgnoreProperties(value = { "company", "hibernateLazyInitializer", "handler", "employee", "subtasks",
+			"mainTask" }, allowSetters = true)
 	private List<Task> tasks;
+
+	private String comment;
 
 	@PrePersist
 	public void prePersist() {
@@ -158,12 +148,12 @@ public class Company implements Serializable {
 	}
 
 	public void addEmployee(Employee employee) {
-		if(employees.contains(employee)) 
-		return ;
+		if (employees.contains(employee))
+			return;
 		employees.add(employee);
 		employee.setCompany(this);
 	}
-	
+
 	public void removeEmployee(Employee employee) {
 		if (!employees.contains(employee)) {
 			return;
@@ -173,31 +163,36 @@ public class Company implements Serializable {
 	}
 
 	public void addTask(Task task) {
-		if (tasks.contains(task)) 
-				return ;
+		if (tasks.contains(task))
+			return;
 		tasks.add(task);
 		task.setCompany(this);
 	}
 
-	
-	
 	@Override
 	public String toString() {
 		return name.toUpperCase() + ",\n " + email + ", T. " + phone;
 	}
 
-	
-	
+	public String getComment() {
+		return comment;
+	}
+
+	public void setComment(String comment) {
+		this.comment = comment;
+	}
+
 	@Override
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((id == null)? 0: id.hashCode());
-		result = prime * result + ((name == null)? 0 : name.hashCode());
-		result = prime * result + ((email == null)? 0 : email.hashCode());
-		result = prime * result + ((phone == null)? 0 : phone.hashCode());
-		result = prime * result + ((image == null)? 0 : image.hashCode());
-		result = prime * result + ((companyType == null)? 0 : companyType.hashCode());
+		result = prime * result + ((id == null) ? 0 : id.hashCode());
+		result = prime * result + ((name == null) ? 0 : name.hashCode());
+		result = prime * result + ((email == null) ? 0 : email.hashCode());
+		result = prime * result + ((phone == null) ? 0 : phone.hashCode());
+		result = prime * result + ((image == null) ? 0 : image.hashCode());
+		result = prime * result + ((companyType == null) ? 0 : companyType.hashCode());
+		result = prime * result + ((comment == null) ? 0 : comment.hashCode());
 
 		return result;
 	}
@@ -207,14 +202,14 @@ public class Company implements Serializable {
 		if (this == obj) {
 			return true;
 		}
-		
+
 		if (obj == null || !(obj instanceof Task)) {
 			return false;
 		}
-		
+
 		Company other = (Company) obj;
-		
-		if(id == null) {
+
+		if (id == null) {
 			if (other.id == null) {
 				return false;
 			}
@@ -222,51 +217,55 @@ public class Company implements Serializable {
 			return false;
 		}
 
-		if(name == null) {
+		if (name == null) {
 			if (other.name == null) {
 				return false;
 			}
 		} else if (!name.equals(other.name)) {
 			return false;
 		}
-		
-		if(email == null) {
+
+		if (email == null) {
 			if (other.email == null) {
 				return false;
 			}
 		} else if (!email.equals(other.email)) {
 			return false;
-		}		
-		
-		if(phone == null) {
+		}
+
+		if (phone == null) {
 			if (other.phone == null) {
 				return false;
 			}
 		} else if (!phone.equals(other.phone)) {
 			return false;
-		}		
-		
-		if(image == null) {
+		}
+
+		if (image == null) {
 			if (other.image == null) {
 				return false;
 			}
 		} else if (!image.equals(other.image)) {
 			return false;
 		}
-		
-		if(companyType == null) {
+
+		if (companyType == null) {
 			if (other.companyType == null) {
 				return false;
 			}
 		} else if (!companyType.equals(other.companyType)) {
 			return false;
 		}
-		
+		if (comment == null) {
+			if (other.comment == null) {
+				return false;
+			}
+		} else if (!comment.equals(other.comment)) {
+			return false;
+		}
+
 		return true;
 	}
-
-
-
 
 	private static final long serialVersionUID = 1L;
 

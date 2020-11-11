@@ -4,10 +4,7 @@ import java.io.Serializable;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
-//import java.util.Date;
 import java.util.List;
-
-//import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
@@ -21,19 +18,9 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.PrePersist;
 import javax.persistence.Table;
-//import javax.persistence.Temporal;
-//import javax.persistence.TemporalType;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotEmpty;
-//import javax.validation.constraints.NotNull;
-//import javax.validation.constraints.Pattern;
-//import javax.validation.constraints.Size;
 import javax.validation.constraints.Past;
-//import javax.validation.constraints.Pattern;
-
-//import org.springframework.format.annotation.DateTimeFormat;
-
-//import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.movements.springboot.backend.apirest.models.enums.Gender;
@@ -49,59 +36,52 @@ public class Employee implements Serializable {
 
 	@Column(name = "employee_name")
 	@NotEmpty(message = "no pot estar buit")
-	//@Size(min = 2, max = 50)
 	private String name;
 
-	//@Pattern(regexp = "[X-Y]?[0-9]{8}[A-Z]?")
 	private String nif;
-	
-	@Column(name="nif_type", nullable = true, length = 8)
+
+	@Column(name = "nif_type", nullable = true, length = 8)
 	@Enumerated(EnumType.STRING)
 	private NifTypes nifType;
 
-	//@Pattern(regexp = "[\\d]{1,2}[-][\\d]{7,8}[-][\\d]{2}")
 	private String naf;
 
 	@Email
 	private String email;
 
 	private String phone;
-	
+
 	@Past
-	@Column(name = "birth_date", columnDefinition= "DATE")
-	//@DateTimeFormat(pattern = "yyyy-MM-dd")
-	private LocalDate birthDate;	
-	
+	@Column(name = "birth_date", columnDefinition = "DATE")
+	private LocalDate birthDate;
+
 	@Enumerated(EnumType.STRING)
 	private Gender gender;
-	
+
 	private Boolean isEnabled;
-	
+
 	private String comment;
-	
-	
-	@Column(name = "create_at", columnDefinition= "TIMESTAMP")
-	//@Temporal(TemporalType.TIMESTAMP)
-	//@DateTimeFormat(pattern = "dd/MM/yyyy hh:mm:ss")
+
+	@Column(name = "create_at", columnDefinition = "TIMESTAMP")
+
 	private LocalDateTime createAt;
 
-	
 	@OneToMany(mappedBy = "employee", fetch = FetchType.LAZY)
-	@JsonIgnoreProperties(value={"employee", "hibernateLazyInitializer", "handler", "company", "subtasks", "mainTask"}, allowSetters= true)
+	@JsonIgnoreProperties(value = { "employee", "hibernateLazyInitializer", "handler", "company", "subtasks",
+			"mainTask" }, allowSetters = true)
 	private List<Task> tasks;
-	
-	
+
 	@ManyToOne(fetch = FetchType.LAZY, optional = false)
 	@JsonProperty("company")
 	@JoinColumn(name = "company_fk")
-	@JsonIgnoreProperties(value={"employees", "hibernateLazyInitializer", "handler", "tasks", "mainTask"}, allowSetters= true)
+	@JsonIgnoreProperties(value = { "employees", "hibernateLazyInitializer", "handler", "tasks",
+			"mainTask" }, allowSetters = true)
 	private Company company;
-	
 
 	public Employee() {
 		tasks = new ArrayList<Task>();
 		nifType = nifType.DNI;
-		
+
 	}
 
 	public Company getCompany() {
@@ -109,24 +89,23 @@ public class Employee implements Serializable {
 	}
 
 	public void setCompany(Company company) {
-		if(sameAsInit(company)) 
-			return ;
+		if (sameAsInit(company))
+			return;
 		Company oldCompany = this.company;
 		this.company = company;
-		if (oldCompany!=null) {
+		if (oldCompany != null) {
 			oldCompany.removeEmployee(this);
-		
+
 		}
-		if(company!=null) {
+		if (company != null) {
 			company.addEmployee(this);
 		}
 	}
 
-	
 	private boolean sameAsInit(Company newCompany) {
-		return company==null? newCompany == null : company.equals(newCompany);
+		return company == null ? newCompany == null : company.equals(newCompany);
 	}
-	
+
 	public List<Task> getTasks() {
 		return tasks;
 	}
@@ -166,7 +145,7 @@ public class Employee implements Serializable {
 	public void setNifType(NifTypes nifType) {
 		this.nifType = nifType;
 	}
-	
+
 	public String getNaf() {
 		return naf;
 	}
@@ -191,7 +170,6 @@ public class Employee implements Serializable {
 		this.phone = phone;
 	}
 
-	
 	public LocalDate getBirthDate() {
 		return birthDate;
 	}
@@ -207,7 +185,7 @@ public class Employee implements Serializable {
 	public void setGender(Gender gender) {
 		this.gender = gender;
 	}
-	
+
 	public Boolean getIsEnabled() {
 		return isEnabled;
 	}
@@ -243,28 +221,25 @@ public class Employee implements Serializable {
 
 	@Override
 	public String toString() {
-		return name.toUpperCase()+ ". \n NIF: " + nif + ", NAF:" + naf + ", " + email;
+		return name.toUpperCase() + ". \n NIF: " + nif + ", NAF:" + naf + ", " + email;
 	}
-
-	
-	
 
 	@Override
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((id == null)? 0: id.hashCode());
-		result = prime * result + ((name == null)? 0 : name.hashCode());
-		result = prime * result + ((nif == null)? 0 : nif.hashCode());
-		result = prime * result + ((nifType == null)? 0 : nifType.hashCode());
-		result = prime * result + ((naf == null)? 0 : naf.hashCode());
-		result = prime * result + ((email == null)? 0 : email.hashCode());
-		result = prime * result + ((phone == null)? 0 : phone.hashCode());
-		result = prime * result + ((birthDate == null)? 0 : birthDate.hashCode());
-		result = prime * result + ((gender == null)? 0 : gender.hashCode());
+		result = prime * result + ((id == null) ? 0 : id.hashCode());
+		result = prime * result + ((name == null) ? 0 : name.hashCode());
+		result = prime * result + ((nif == null) ? 0 : nif.hashCode());
+		result = prime * result + ((nifType == null) ? 0 : nifType.hashCode());
+		result = prime * result + ((naf == null) ? 0 : naf.hashCode());
+		result = prime * result + ((email == null) ? 0 : email.hashCode());
+		result = prime * result + ((phone == null) ? 0 : phone.hashCode());
+		result = prime * result + ((birthDate == null) ? 0 : birthDate.hashCode());
+		result = prime * result + ((gender == null) ? 0 : gender.hashCode());
 		result = prime * result + (isEnabled ? 1231 : 1237);
-		result = prime * result + ((comment == null)? 0 : comment.hashCode());
-		
+		result = prime * result + ((comment == null) ? 0 : comment.hashCode());
+
 		return result;
 	}
 
@@ -273,14 +248,14 @@ public class Employee implements Serializable {
 		if (this == obj) {
 			return true;
 		}
-		
+
 		if (obj == null || !(obj instanceof Task)) {
 			return false;
 		}
-		
+
 		Employee other = (Employee) obj;
-		
-		if(id == null) {
+
+		if (id == null) {
 			if (other.id == null) {
 				return false;
 			}
@@ -288,80 +263,76 @@ public class Employee implements Serializable {
 			return false;
 		}
 
-		if(name == null) {
+		if (name == null) {
 			if (other.name == null) {
 				return false;
 			}
 		} else if (!name.equals(other.name)) {
 			return false;
 		}
-		
-		if(nif == null) {
+
+		if (nif == null) {
 			if (other.nif == null) {
 				return false;
 			}
 		} else if (!nif.equals(other.nif)) {
 			return false;
 		}
-		
-		if(nifType != other.nifType) {
+
+		if (nifType != other.nifType) {
 			return false;
 		}
-		
-		if(naf == null) {
+
+		if (naf == null) {
 			if (other.naf == null) {
 				return false;
 			}
 		} else if (!naf.equals(other.naf)) {
 			return false;
 		}
-		
-		
-		if(email == null) {
+
+		if (email == null) {
 			if (other.email == null) {
 				return false;
 			}
 		} else if (!email.equals(other.email)) {
 			return false;
-		}		
-		
-		if(phone == null) {
+		}
+
+		if (phone == null) {
 			if (other.phone == null) {
 				return false;
 			}
 		} else if (!phone.equals(other.phone)) {
 			return false;
-		}		
-		
-		if(birthDate == null) {
+		}
+
+		if (birthDate == null) {
 			if (other.birthDate == null) {
 				return false;
 			}
 		} else if (!birthDate.equals(other.birthDate)) {
 			return false;
 		}
-		
-		if(gender != other.gender) {
+
+		if (gender != other.gender) {
 			return false;
 		}
-		
+
 		if (isEnabled != other.isEnabled) {
 			return false;
 		}
-		
-		if(comment == null) {
+
+		if (comment == null) {
 			if (other.comment == null) {
 				return false;
 			}
 		} else if (!comment.equals(other.comment)) {
 			return false;
 		}
-		
+
 		return true;
 	}
-
-
-
 
 	private static final long serialVersionUID = 1L;
 }

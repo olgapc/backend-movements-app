@@ -4,9 +4,7 @@ import java.io.Serializable;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
-//import java.util.Date;
 import java.util.List;
-
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -21,21 +19,9 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.PrePersist;
 import javax.persistence.Table;
-//import javax.persistence.Temporal;
-//import javax.persistence.TemporalType;
-//import javax.validation.constraints.FutureOrPresent;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
-
 import com.fasterxml.jackson.annotation.JsonFormat;
-
-//import org.springframework.format.annotation.DateTimeFormat;
-
-//import java.time.format.DateTimeFormatter;
-
-
-//import com.fasterxml.jackson.annotation.JsonBackReference;
-//import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.movements.springboot.backend.apirest.models.enums.TimesType;
@@ -66,65 +52,56 @@ public class Task implements Serializable {
 	@Column(name = "number_to_calculate_deadline_to_alarm")
 	private String numberToCalculateDeadlineToAlarm;
 
-	//@Column(name = "days_to_fix_error")
-	//private Integer daysToFixError;
-
 	@Column(name = "type_calculation_deadline")
 	@Enumerated(EnumType.STRING)
 	private TimesType typeCalculationDeadline;
 
-	//@DateTimeFormat(pattern = "yyyy-MM-dd")
-	@Column(name = "deadline", columnDefinition= "DATE")
-	@NotNull(message="no pot estar buit")	
-	//@JsonFormat(pattern = "yyyy-MM-dd")
-	//@Temporal(TemporalType.DATE)
+	@Column(name = "deadline", columnDefinition = "DATE")
+	@NotNull(message = "no pot estar buit")
 	private LocalDate deadline;
 
-	@Column(name = "create_at", columnDefinition= "TIMESTAMP")
-	
-	//@Temporal(TemporalType.TIMESTAMP)
+	@Column(name = "create_at", columnDefinition = "TIMESTAMP")
 	private LocalDateTime createAt;
 
-	
 	@ManyToOne(optional = true, fetch = FetchType.LAZY)
 	@JsonIgnoreProperties({ "tasks", "hibernateLazyInitializer", "handler", "company", "createAt" })
 	@JoinColumn(name = "employee_fk")
 	private Employee employee;
-	
-	
+
 	@JsonProperty("company")
 	@ManyToOne(optional = true, fetch = FetchType.LAZY)
 	@JsonIgnoreProperties({ "tasks", "hibernateLazyInitializer", "handler", "employees", "createAt" })
 	@JoinColumn(name = "company_fk")
 	private Company company;
 
-	
 	@OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
 	@JoinColumn(name = "task_fk")
-	@JsonIgnoreProperties({"hibernateLazyInitializer", "handler" })
+	@JsonIgnoreProperties({ "hibernateLazyInitializer", "handler" })
 	private List<TaskInformation> taskInformations;
 
 	@Column(name = "is_done")
 	private boolean isDone;
 
 	@Column(name = "done_at")
-	@JsonFormat(shape=JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
-	//@Temporal(TemporalType.TIMESTAMP)
+	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
 	private LocalDateTime doneAt;
-	
+
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "maintask_fk")
-	@JsonIgnoreProperties(value = { "subtasks","employee", "company", "hibernateLazyInitializer", "handler", "mainTask"}, allowSetters=true)
+	@JsonIgnoreProperties(value = { "subtasks", "employee", "company", "hibernateLazyInitializer", "handler",
+			"mainTask" }, allowSetters = true)
 	private Task mainTask;
 
-	
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "mainTask")
-	@JsonIgnoreProperties(value = { "mainTask", "employee", "company", "hibernateLazyInitializer", "handler", "subtasks"}, allowSetters=true)
+	@JsonIgnoreProperties(value = { "mainTask", "employee", "company", "hibernateLazyInitializer", "handler",
+			"subtasks" }, allowSetters = true)
 	private List<Task> subtasks;
 
 	@Column(name = "is_maintask")
 	private boolean isMainTask;
-	
+
+	public String comment;
+
 	public Task() {
 		taskInformations = new ArrayList<>();
 		subtasks = new ArrayList<>();
@@ -174,14 +151,6 @@ public class Task implements Serializable {
 		this.numberToCalculateDeadlineToAlarm = numberToCalculteDeadlineToAlarm;
 	}
 
-	//public Integer getDaysToFixError() {
-	//	return daysToFixError;
-	//}
-
-	//public void setDaysToFixError(Integer daysToFixError) {
-	//	this.daysToFixError = daysToFixError;
-	//}
-
 	public TimesType getTypeCalculationDeadline() {
 		return typeCalculationDeadline;
 	}
@@ -227,7 +196,7 @@ public class Task implements Serializable {
 	}
 
 	public void setTaskInformations(List<TaskInformation> taskInformations) {
-		
+
 		this.taskInformations = taskInformations;
 	}
 
@@ -263,7 +232,7 @@ public class Task implements Serializable {
 	public void setIsToSend(boolean isToSend) {
 		this.isToSend = isToSend;
 	}
-	
+
 	public void setIsTemplate(boolean isTemplate) {
 		this.isTemplate = isTemplate;
 	}
@@ -296,32 +265,36 @@ public class Task implements Serializable {
 		this.isMainTask = isMainTask;
 	}
 
+	public String getComment() {
+		return comment;
+	}
 
-
-
-
-
+	public void setComment(String comment) {
+		this.comment = comment;
+	}
 
 	@Override
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((id == null)? 0: id.hashCode());
-		result = prime * result + ((description == null)? 0 : description.hashCode());
+		result = prime * result + ((id == null) ? 0 : id.hashCode());
+		result = prime * result + ((description == null) ? 0 : description.hashCode());
 		result = prime * result + (isOptionalSubtask ? 1231 : 1237);
 		result = prime * result + (isToSend ? 1231 : 1237);
 		result = prime * result + (isTemplate ? 1231 : 1237);
-		result = prime * result + ((templateName == null )? 0 : templateName.hashCode());
-		result = prime * result + ((numberToCalculateDeadlineToAlarm == null )? 0 : numberToCalculateDeadlineToAlarm.hashCode());
-		result = prime * result + ((typeCalculationDeadline == null )? 0 : typeCalculationDeadline.hashCode());
-		result = prime * result + ((deadline == null )? 0 : deadline.hashCode());
-		result = prime * result + ((createAt == null )? 0 : createAt.hashCode());
-		result = prime * result + ((employee == null )? 0 : employee.hashCode());
-		result = prime * result + ((company == null )? 0 : company.hashCode());
-		result = prime * result + (isDone? 1231 : 1237);
-		result = prime * result + ((doneAt == null )? 0 : doneAt.hashCode());
-		result = prime * result + ((mainTask == null )? 0 : mainTask.hashCode());
-		result = prime * result + (isMainTask? 1231 : 1237);
+		result = prime * result + ((templateName == null) ? 0 : templateName.hashCode());
+		result = prime * result
+				+ ((numberToCalculateDeadlineToAlarm == null) ? 0 : numberToCalculateDeadlineToAlarm.hashCode());
+		result = prime * result + ((typeCalculationDeadline == null) ? 0 : typeCalculationDeadline.hashCode());
+		result = prime * result + ((deadline == null) ? 0 : deadline.hashCode());
+		result = prime * result + ((createAt == null) ? 0 : createAt.hashCode());
+		result = prime * result + ((employee == null) ? 0 : employee.hashCode());
+		result = prime * result + ((company == null) ? 0 : company.hashCode());
+		result = prime * result + (isDone ? 1231 : 1237);
+		result = prime * result + ((doneAt == null) ? 0 : doneAt.hashCode());
+		result = prime * result + ((mainTask == null) ? 0 : mainTask.hashCode());
+		result = prime * result + (isMainTask ? 1231 : 1237);
+		result = prime * result + ((comment == null) ? 0 : comment.hashCode());
 		return result;
 	}
 
@@ -330,123 +303,130 @@ public class Task implements Serializable {
 		if (this == obj) {
 			return true;
 		}
-		
+
 		if (obj == null || !(obj instanceof Task)) {
 			return false;
 		}
-		
+
 		Task other = (Task) obj;
-		
-		if(id == null) {
+
+		if (id == null) {
 			if (other.id == null) {
 				return false;
 			}
 		} else if (!id.equals(other.id)) {
 			return false;
 		}
-		
+
 		if (description == null) {
-			if(other.description == null) {
+			if (other.description == null) {
 				return false;
 			}
 		} else if (!description.equals(other.description)) {
 			return false;
 		}
-		
+
 		if (isOptionalSubtask != other.isOptionalSubtask) {
 			return false;
 		}
-		
+
 		if (isToSend != other.isToSend) {
 			return false;
 		}
 		if (isTemplate != other.isTemplate) {
 			return false;
 		}
-		
+
 		if (templateName == null) {
-			if(other.templateName == null) {
+			if (other.templateName == null) {
 				return false;
 			}
 		} else if (!templateName.equals(other.templateName)) {
 			return false;
 		}
-		
+
 		if (numberToCalculateDeadlineToAlarm == null) {
-			if(other.numberToCalculateDeadlineToAlarm == null) {
+			if (other.numberToCalculateDeadlineToAlarm == null) {
 				return false;
 			}
 		} else if (!numberToCalculateDeadlineToAlarm.equals(other.numberToCalculateDeadlineToAlarm)) {
 			return false;
 		}
-		
+
 		if (typeCalculationDeadline == null) {
-			if(other.typeCalculationDeadline == null) {
+			if (other.typeCalculationDeadline == null) {
 				return false;
 			}
 		} else if (!typeCalculationDeadline.equals(other.typeCalculationDeadline)) {
 			return false;
 		}
-		
+
 		if (deadline == null) {
-			if(other.deadline == null) {
+			if (other.deadline == null) {
 				return false;
 			}
 		} else if (!deadline.equals(other.deadline)) {
 			return false;
 		}
-		
+
 		if (createAt == null) {
-			if(other.createAt == null) {
+			if (other.createAt == null) {
 				return false;
 			}
 		} else if (!createAt.equals(other.createAt)) {
 			return false;
 		}
-		
+
 		if (employee == null) {
-			if(other.employee == null) {
+			if (other.employee == null) {
 				return false;
 			}
 		} else if (!employee.equals(other.employee)) {
 			return false;
 		}
-		
+
 		if (company == null) {
-			if(other.company == null) {
+			if (other.company == null) {
 				return false;
 			}
 		} else if (!company.equals(other.company)) {
 			return false;
 		}
-		
+
 		if (isDone != other.isDone) {
 			return false;
 		}
-		
+
 		if (doneAt == null) {
-			if(other.doneAt == null) {
+			if (other.doneAt == null) {
 				return false;
 			}
 		} else if (!doneAt.equals(other.doneAt)) {
 			return false;
 		}
-		
+
 		if (mainTask == null) {
-			if(other.mainTask == null) {
+			if (other.mainTask == null) {
 				return false;
 			}
 		} else if (!mainTask.equals(other.mainTask)) {
 			return false;
 		}
-		
+
 		if (isMainTask != other.isMainTask) {
 			return false;
 		}
-		
+
+		if (comment == null) {
+			if (other.comment == null) {
+				return false;
+			}
+		} else if (!comment.equals(other.comment)) {
+			return false;
+		}
+
 		return true;
 	}
-
 
 	private static final long serialVersionUID = 1L;
 

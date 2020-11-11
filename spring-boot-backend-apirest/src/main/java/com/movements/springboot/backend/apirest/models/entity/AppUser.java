@@ -2,10 +2,7 @@ package com.movements.springboot.backend.apirest.models.entity;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
-//import java.util.Date;
 import java.util.List;
-
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -18,11 +15,6 @@ import javax.persistence.ManyToMany;
 import javax.persistence.PrePersist;
 import javax.persistence.UniqueConstraint;
 import javax.persistence.Table;
-//import javax.persistence.Temporal;
-//import javax.persistence.TemporalType;
-
-//import org.springframework.format.annotation.DateTimeFormat;
-
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 @Entity
@@ -35,13 +27,12 @@ public class AppUser implements Serializable {
 
 	@Column(unique = true, length = 20)
 	private String username;
-	
+
 	private String name;
-	
-	@Column(name= "last_name")
+
+	@Column(name = "last_name")
 	private String lastName;
-	
-	
+
 	@Column(unique = true)
 	private String email;
 
@@ -50,16 +41,17 @@ public class AppUser implements Serializable {
 
 	private Boolean enabled;
 
-	@Column(name = "create_at", columnDefinition= "TIMESTAMP")
-	//@Temporal(TemporalType.TIMESTAMP)
-	//@DateTimeFormat(pattern = "dd/MM/yyyy hh:mm:ss")
+	private String comment;
+
+	@Column(name = "create_at", columnDefinition = "TIMESTAMP")
+	// @Temporal(TemporalType.TIMESTAMP)
+	// @DateTimeFormat(pattern = "dd/MM/yyyy hh:mm:ss")
 	private LocalDateTime createAt;
 
 	@ManyToMany(fetch = FetchType.LAZY)
-	@JoinTable(name="users_roles", joinColumns = @JoinColumn(name="user_fk"),
-	inverseJoinColumns=@JoinColumn(name="role_fk"),
-	uniqueConstraints = {@UniqueConstraint(columnNames= {"user_fk", "role_fk"})})
-	@JsonIgnoreProperties(value={"users", "hibernateLazyInitializer", "handler"}, allowSetters=true)
+	@JoinTable(name = "users_roles", joinColumns = @JoinColumn(name = "user_fk"), inverseJoinColumns = @JoinColumn(name = "role_fk"), uniqueConstraints = {
+			@UniqueConstraint(columnNames = { "user_fk", "role_fk" }) })
+	@JsonIgnoreProperties(value = { "users", "hibernateLazyInitializer", "handler" }, allowSetters = true)
 	private List<Role> roles;
 
 	public Long getId() {
@@ -77,7 +69,6 @@ public class AppUser implements Serializable {
 	public void setUsername(String username) {
 		this.username = username;
 	}
-	
 
 	public String getName() {
 		return name;
@@ -126,18 +117,26 @@ public class AppUser implements Serializable {
 	public void setCreateAt(LocalDateTime createAt) {
 		this.createAt = createAt;
 	}
-	
+
 	@PrePersist
 	public void prePersist() {
 		createAt = LocalDateTime.now();
 	}
-	
+
 	public List<Role> getRoles() {
 		return roles;
 	}
 
 	public void setRoles(List<Role> roles) {
 		this.roles = roles;
+	}
+
+	public String getComment() {
+		return comment;
+	}
+
+	public void setComment(String comment) {
+		this.comment = comment;
 	}
 
 	private static final long serialVersionUID = 1L;
