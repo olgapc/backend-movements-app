@@ -19,8 +19,6 @@ import javax.validation.constraints.NotEmpty;
 
 import javax.validation.constraints.Size;
 
-
-
 @Entity
 @Table(name = "informations")
 public class Information implements Serializable {
@@ -32,11 +30,11 @@ public class Information implements Serializable {
 	@NotEmpty
 	@Size(min = 2, max = 250)
 	private String description;
-	
+
 	private String comment;
 
-	@Column(name = "create_at", columnDefinition= "TIMESTAMP")
-	//@Temporal(TemporalType.TIMESTAMP)
+	@Column(name = "create_at", columnDefinition = "TIMESTAMP")
+	// @Temporal(TemporalType.TIMESTAMP)
 	private LocalDateTime createAt;
 
 	public Long getId() {
@@ -54,7 +52,7 @@ public class Information implements Serializable {
 	public void setDescription(String description) {
 		this.description = description;
 	}
-	
+
 	public String getComment() {
 		return comment;
 	}
@@ -80,6 +78,6 @@ public class Information implements Serializable {
 	public String toString() {
 		return description.toUpperCase();
 	}
-	
+
 	private static final long serialVersionUID = 1L;
 }
