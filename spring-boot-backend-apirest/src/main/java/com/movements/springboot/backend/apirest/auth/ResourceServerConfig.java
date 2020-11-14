@@ -21,24 +21,25 @@ public class ResourceServerConfig extends ResourceServerConfigurerAdapter {
 
 	@Override
 	public void configure(HttpSecurity http) throws Exception {
-		http.authorizeRequests().antMatchers(HttpMethod.GET, "/api/companies", "/api/uploads/img/**", "/api/uploads/**", "/images/**")
-				.permitAll()
-				.antMatchers("/api/companies/{id}").permitAll()
-				.antMatchers("/api/tasks/**").permitAll()
-				.antMatchers("/api/employee/form/**").permitAll()
-				.antMatchers("/api/employees/{id}").permitAll()
-				.antMatchers("/api/employees").permitAll()
-				.antMatchers("/api/users").permitAll()
-				.antMatchers("/api/users/**").permitAll()
-				.antMatchers("/api/roles").permitAll()
-				.antMatchers("/api/company_types").permitAll()
+		http.authorizeRequests()
+		
+				//.antMatchers(HttpMethod.GET, "/api/companies", "/api/uploads/img/**", "/api/uploads/**", "/images/**").permitAll()
+				//.antMatchers("/api/companies/{id}").permitAll()
+				//.antMatchers("/api/tasks/**").permitAll()
+				//.antMatchers("/api/employee/form/**").permitAll()
+				//.antMatchers("/api/employees/{id}").permitAll()
+				//.antMatchers("/api/employees").permitAll()
+				//.antMatchers("/api/users").permitAll()
+				//.antMatchers("/api/users/**").permitAll()
+				//.antMatchers("/api/roles").permitAll()
+				//.antMatchers("/api/company_types").permitAll()
 				/*
 				 * .antMatchers(HttpMethod.GET, "/api/companies/{id}").hasAnyRole("USER",
-				 * "ADMIN") .antMatchers(HttpMethod.GET,
-				 * "/api/companies/upload").hasAnyRole("USER", "ADMIN")
+				 * "ADMIN") .antMatchers(HttpMethod.GET, "/api/companies/upload").hasAnyRole("USER", "ADMIN")
 				 * .antMatchers(HttpMethod.POST, "/api/companies").hasRole("ADMIN")
 				 * .antMatchers("/api/companies/**").hasRole("ADMIN")
 				 */
+				.antMatchers(HttpMethod.GET, "/images/**").permitAll()
 				.anyRequest().authenticated()
 				.and().cors().configurationSource(corsConfigurationSource());
 	}

@@ -16,9 +16,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.annotation.Secured;
-//import org.springframework.security.access.annotation.Secured;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -31,21 +28,12 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.bind.annotation.SessionAttributes;
-import org.springframework.web.bind.support.SessionStatus;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
-
 import com.movements.springboot.backend.apirest.editors.LowerCaseEditor;
 import com.movements.springboot.backend.apirest.editors.PascalCaseEditor;
 import com.movements.springboot.backend.apirest.editors.UpperCaseEditor;
-import com.movements.springboot.backend.apirest.models.entity.Company;
 import com.movements.springboot.backend.apirest.models.entity.Employee;
-import com.movements.springboot.backend.apirest.models.entity.Task;
-import com.movements.springboot.backend.apirest.models.enums.NifTypes;
 import com.movements.springboot.backend.apirest.models.services.ICompanyService;
 import com.movements.springboot.backend.apirest.models.services.IEmployeeService;
 import com.movements.springboot.backend.apirest.validation.EmployeeValidator;
@@ -75,16 +63,13 @@ public class EmployeeRestController {
 
 	}
 
-	@ModelAttribute("gender")
-	public List<String> gender(){
-		return Arrays.asList("Home","Dona");
-	}
-	
+	@Secured({"ROLE_USER", "ROLE_ADMIN"})
 	@GetMapping("/employees")
 	public List<Employee> index() {
 		return employeeService.findAll();
 	}
 	
+	@Secured({"ROLE_USER", "ROLE_ADMIN"})
 	@GetMapping("/employees/page/{page}")
 	public Page<Employee> index(@PathVariable Integer page) {
 		Pageable pageable = PageRequest.of(page, 5);
@@ -92,7 +77,7 @@ public class EmployeeRestController {
 	}
 	
 	
-	//@Secured("ROLE_USER")
+	@Secured({"ROLE_USER", "ROLE_ADMIN"})
 	@GetMapping(value = "/employees/{id}")
 	public ResponseEntity<?> show(@PathVariable Long id) {
 		
@@ -118,6 +103,7 @@ public class EmployeeRestController {
 		return new ResponseEntity<Employee>(employee, HttpStatus.OK);
 	}
 
+	
 	@Secured("ROLE_ADMIN")
 	@DeleteMapping("/employees/{id}")
 	public ResponseEntity<?> delete(@PathVariable Long id) {
@@ -140,7 +126,7 @@ public class EmployeeRestController {
 	
 	
 	
-	//@Secured("ROLE_ADMIN")
+	@Secured({"ROLE_USER", "ROLE_ADMIN"})
 	@PostMapping("/employees")
 	@ResponseStatus(HttpStatus.CREATED)
 	public ResponseEntity<?> create(@Valid @RequestBody Employee employee, BindingResult result) {
@@ -177,7 +163,8 @@ public class EmployeeRestController {
 		return new ResponseEntity<Map<String, Object>>(response, HttpStatus.CREATED);
 	}
 
-	@Secured("ROLE_ADMIN")
+	
+	@Secured({"ROLE_USER", "ROLE_ADMIN"})
 	@PutMapping("/employees/{id}")
 	public ResponseEntity<?> update(@Valid @RequestBody Employee employee, 
 			BindingResult result, @PathVariable Long id){

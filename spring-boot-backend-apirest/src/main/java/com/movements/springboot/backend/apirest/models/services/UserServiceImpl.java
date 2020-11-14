@@ -1,8 +1,7 @@
 package com.movements.springboot.backend.apirest.models.services;
 
+import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,11 +15,10 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
 import com.movements.springboot.backend.apirest.models.dao.IRoleDao;
 import com.movements.springboot.backend.apirest.models.dao.IUserDao;
-//import com.movements.springboot.backend.apirest.models.entity.AppUser;
 import com.movements.springboot.backend.apirest.models.entity.Role;
+import com.movements.springboot.backend.apirest.models.entity.UserRole;
 import com.movements.springboot.backend.apirest.models.entity.AppUser;
 
 @Service
@@ -91,11 +89,23 @@ public class UserServiceImpl implements IUserService, UserDetailsService{
 			throw new UsernameNotFoundException("Error en el login: no existeix l\'usuari '"+username+"' en el sistema!");
 		}
 		
-		List<GrantedAuthority> authorities = user.getRoles()
-				.stream()
-				.map(role -> new SimpleGrantedAuthority(role.getRole()))
-				.peek(authority -> logger.info("Role: " + authority.getAuthority()))
-				.collect(Collectors.toList());
+		List<GrantedAuthority> authorities = new ArrayList<>();
+		
+		for (UserRole userRole : user.getUserRoles()) {
+			authorities.add(new SimpleGrantedAuthority(userRole.getRole().getRole()));
+		}
+		
+		authorities.stream()
+		.peek(authority ->
+		logger.info("Role: " + authority.getAuthority()));
+		
+		
+		/*
+		 * List<GrantedAuthority> authorities = user.getRoles() .stream() .map(role ->
+		 * new SimpleGrantedAuthority(role.getRole())) .peek(authority ->
+		 * logger.info("Role: " + authority.getAuthority()))
+		 * .collect(Collectors.toList());
+		 */
 		
 		return new User(user.getUsername(), user.getPassword(), user.getEnabled(), true, true, true, authorities);
 	}

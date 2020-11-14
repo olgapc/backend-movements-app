@@ -1,15 +1,10 @@
 package com.movements.springboot.backend.apirest.controllers;
 
-import java.io.Console;
-import java.util.ArrayList;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
-
 import javax.validation.Valid;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.data.domain.Page;
@@ -18,7 +13,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.annotation.Secured;
-//import org.springframework.security.access.annotation.Secured;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.WebDataBinder;
@@ -31,18 +25,10 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.bind.annotation.SessionAttributes;
-import org.springframework.web.bind.support.SessionStatus;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
-
 import com.movements.springboot.backend.apirest.editors.PascalCaseEditor;
-import com.movements.springboot.backend.apirest.models.entity.Company;
-import com.movements.springboot.backend.apirest.models.entity.Employee;
 import com.movements.springboot.backend.apirest.models.entity.Information;
 import com.movements.springboot.backend.apirest.models.entity.Task;
 import com.movements.springboot.backend.apirest.models.services.ICompanyService;
@@ -54,11 +40,11 @@ import com.movements.springboot.backend.apirest.models.services.ITaskService;
 @RequestMapping("/api")
 public class TaskRestController {
 
-	@Autowired
-	private ICompanyService companyService;
+	//@Autowired
+	//private ICompanyService companyService;
 
-	@Autowired
-	private IEmployeeService employeeService;
+	//@Autowired
+	//private IEmployeeService employeeService;
 
 	@Autowired
 	private ITaskService taskService;
@@ -72,7 +58,7 @@ public class TaskRestController {
 
 	}
 
-	// @Secured("ROLE_ADMIN")
+	@Secured({"ROLE_USER", "ROLE_ADMIN"})
 	@GetMapping("/tasks/{idTask}")
 	@ResponseStatus(HttpStatus.OK)
 	public Task show(@PathVariable(value = "idTask") Long idTask, Model model, RedirectAttributes flash) {
@@ -80,7 +66,7 @@ public class TaskRestController {
 		return taskService.findTaskById(idTask);
 	}
 
-	// @Secured("ROLE_ADMIN")
+	@Secured({"ROLE_USER", "ROLE_ADMIN"})
 	@DeleteMapping("/tasks/{id}")
 	public ResponseEntity<?> delete(@PathVariable Long id) {
 
@@ -101,17 +87,20 @@ public class TaskRestController {
 		return new ResponseEntity<Map<String, Object>>(response, HttpStatus.OK);
 	}
 
+	@Secured({"ROLE_USER", "ROLE_ADMIN"})
 	@GetMapping(value = "/tasks/upload-informations/{term}")
 	@ResponseStatus(HttpStatus.OK)
 	public List<Information> uploadInformations(@PathVariable String term) {
 		return taskService.findInformationByDescription(term);
 	}
-
+	
+	@Secured({"ROLE_USER", "ROLE_ADMIN"})
 	@GetMapping("/tasks")
 	public List<Task> index() {
 		return taskService.findAll();
 	}
 
+	@Secured({"ROLE_USER", "ROLE_ADMIN"})
 	@GetMapping("/tasks/page/{page}")
 	public Page<Task> index(@PathVariable Integer page) {
 		Pageable pageable = PageRequest.of(page, 5);
@@ -119,7 +108,7 @@ public class TaskRestController {
 	}
 	
 
-	
+	@Secured({"ROLE_USER", "ROLE_ADMIN"})
 	@PostMapping("/tasks")
 	@ResponseStatus(HttpStatus.CREATED)
 	public ResponseEntity<?> create(@Valid @RequestBody Task task, BindingResult result) {
@@ -156,7 +145,7 @@ public class TaskRestController {
 	}
 
 	
-	@Secured("ROLE_ADMIN")
+	@Secured({"ROLE_USER", "ROLE_ADMIN"})
 	@PutMapping("/tasks/{id}")
 	public ResponseEntity<?> update(@Valid @RequestBody Task task, 
 			BindingResult result, @PathVariable Long id) {
@@ -218,16 +207,15 @@ public class TaskRestController {
 
 	}
 	
-	// @Secured("ROLE_USER")
+	@Secured({"ROLE_USER", "ROLE_ADMIN"})
 	@GetMapping("/informations/page/{page}")
 	public Page<Information> informationList(@PathVariable Integer page) {
 		Pageable pageable = PageRequest.of(page, 5);
 		return taskService.findAllInformations(pageable);
 	}
 	
-	
 
-	// @Secured("ROLE_ADMIN")
+	@Secured({"ROLE_USER", "ROLE_ADMIN"})
 	@GetMapping("/informations/{idInformation}")
 	@ResponseStatus(HttpStatus.OK)
 	public Information showInformation(@PathVariable(value = "idInformation") Long idInformation, Model model, RedirectAttributes flash) {
@@ -236,7 +224,7 @@ public class TaskRestController {
 	}
 
 	
-	@Secured("ROLE_ADMIN")
+	@Secured({"ROLE_USER", "ROLE_ADMIN"})
 	@PostMapping("/informations")
 	@ResponseStatus(HttpStatus.CREATED)
 	public ResponseEntity<?> createInformation (@Valid @RequestBody Information information, BindingResult result) {
@@ -275,7 +263,7 @@ public class TaskRestController {
 	}
 
 	
-	@Secured("ROLE_ADMIN")
+	@Secured({"ROLE_USER", "ROLE_ADMIN"})
 	@PutMapping("/informations/{id}")
 	public ResponseEntity<?> updateInformation(@Valid @RequestBody Information information, 
 			BindingResult result, @PathVariable Long id) {
@@ -324,7 +312,7 @@ public class TaskRestController {
 	}
 	
 	
-	// @Secured("ROLE_ADMIN")
+	@Secured("ROLE_ADMIN")
 	@DeleteMapping("/informations/{id}")
 	public ResponseEntity<?> deleteInformation(@PathVariable Long id) {
 		

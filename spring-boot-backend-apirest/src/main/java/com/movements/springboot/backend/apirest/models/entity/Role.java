@@ -26,9 +26,12 @@ public class Role implements Serializable {
 	@Column(unique = true, length = 20)
 	private String role;
 
-	@ManyToMany(mappedBy = "roles")
-	@JsonIgnoreProperties(value = { "roles", "hibernateLazyInitializer", "handler" }, allowSetters = true)
-	private List<AppUser> users;
+	/*
+	 * @ManyToMany(mappedBy = "roles")
+	 * 
+	 * @JsonIgnoreProperties(value = { "roles", "hibernateLazyInitializer",
+	 * "handler" }, allowSetters = true) private List<AppUser> users;
+	 */
 
 	private String comment;
 
@@ -69,14 +72,13 @@ public class Role implements Serializable {
 		this.role = role;
 	}
 
-	public List<AppUser> getUsers() {
-		return users;
-	}
-
-	public void setUsers(List<AppUser> users) {
-		this.users = users;
-	}
-
+	/*
+	 * public List<AppUser> getUsers() { return users; }
+	 * 
+	 * public void setUsers(List<AppUser> users) { this.users = users; }
+	 */
+	
+	
 	public String getComment() {
 		return comment;
 	}

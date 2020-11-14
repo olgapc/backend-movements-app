@@ -25,10 +25,10 @@ public class TokenAdditionalInfo implements TokenEnhancer {
 		AppUser user = userService.findByUsername(authentication.getName());
 		
 		Map<String, Object> info = new HashMap<>();
-		info.put("info_adicional", "Hola que tal ".concat(authentication.getName()));
-		info.put("datos usuario", user.getId() + ": " + user.getUsername() + " mail: "+ user.getEmail());
-		info.put("nom", user.getName());
-		info.put("cognom", user.getLastName());
+		//info.put("info_adicional", "Hola ".concat(authentication.getName()));
+		//info.put("datos usuario", user.getId() + ": " + user.getUsername() + " mail: "+ user.getEmail());
+		info.put("username", user.getUsername());
+		//info.put("cognom", user.getLastName());
 		
 		((DefaultOAuth2AccessToken) accessToken).setAdditionalInformation(info);
 		

@@ -72,19 +72,20 @@ public class CompanyRestController {
 		binder.registerCustomEditor(String.class, "email", new LowerCaseEditor());
 	}
 	
+	@Secured({"ROLE_USER", "ROLE_ADMIN"})
 	@GetMapping("/companies")
 	public List<Company> index() {
 		return companyService.findAll();
 	}
 
-	
+	@Secured({"ROLE_USER", "ROLE_ADMIN"})
 	@GetMapping("/companies/page/{page}")
 	public Page<Company> index(@PathVariable Integer page) {
 		Pageable pageable = PageRequest.of(page, 5);
 		return companyService.findAll(pageable);
 	}
 	
-	//@Secured({"ROLE_USER", "ROLE_ADMIN"})
+	@Secured({"ROLE_USER", "ROLE_ADMIN"})
 	@GetMapping("/companies/{id}")
 	public ResponseEntity<?> show(@PathVariable Long id) {
 
@@ -110,7 +111,7 @@ public class CompanyRestController {
 	}
 
 	
-	@Secured("ROLE_ADMIN")
+	@Secured({"ROLE_USER", "ROLE_ADMIN"})
 	@PostMapping("/companies")
 	@ResponseStatus(HttpStatus.CREATED)
 	public ResponseEntity<?> create(@Valid @RequestBody Company company, BindingResult result) {
@@ -149,7 +150,7 @@ public class CompanyRestController {
 	}
 
 	
-	@Secured("ROLE_ADMIN")
+	@Secured({"ROLE_USER", "ROLE_ADMIN"})
 	@PutMapping("/companies/{id}")
 	public ResponseEntity<?> update(@Valid @RequestBody Company company, 
 			BindingResult result, @PathVariable Long id) {
@@ -267,7 +268,7 @@ public class CompanyRestController {
 	}
 
 	
-	
+	@Secured({"ROLE_USER", "ROLE_ADMIN"})
 	@GetMapping("/uploads/img/{imageName:.+}")
 	public ResponseEntity<Resource> viewImage(@PathVariable String imageName){
 		
@@ -286,7 +287,7 @@ public class CompanyRestController {
 	}
 	
 	
-	@Secured("ROLE_ADMIN")
+	@Secured({"ROLE_USER", "ROLE_ADMIN"})
 	@GetMapping("/company_types")
 	public List<CompanyType> companyTypesList(){
 		
@@ -302,7 +303,7 @@ public class CompanyRestController {
 	
 
 
-	// @Secured("ROLE_ADMIN")
+	@Secured({"ROLE_USER", "ROLE_ADMIN"})
 	@GetMapping("/company_types/{idCompanyType}")
 	@ResponseStatus(HttpStatus.OK)
 	public CompanyType showInformation(@PathVariable(value = "idCompanyType") Long idCompanyType, Model model, RedirectAttributes flash) {
@@ -311,7 +312,7 @@ public class CompanyRestController {
 	}
 
 	
-	@Secured("ROLE_ADMIN")
+	@Secured({"ROLE_USER", "ROLE_ADMIN"})
 	@PostMapping("/company_types")
 	@ResponseStatus(HttpStatus.CREATED)
 	public ResponseEntity<?> createCompanyType (@Valid @RequestBody CompanyType companyType, BindingResult result) {
@@ -350,7 +351,7 @@ public class CompanyRestController {
 	}
 
 	
-	@Secured("ROLE_ADMIN")
+	@Secured({"ROLE_USER", "ROLE_ADMIN"})
 	@PutMapping("/company_types/{id}")
 	public ResponseEntity<?> updateCompanyType(@Valid @RequestBody CompanyType companyType, 
 			BindingResult result, @PathVariable Long id) {
@@ -398,7 +399,7 @@ public class CompanyRestController {
 	}
 	
 	
-	// @Secured("ROLE_ADMIN")
+	@Secured("ROLE_ADMIN")
 	@DeleteMapping("/company_types/{id}")
 	public ResponseEntity<?> deleteCompanyType(@PathVariable Long id) {
 		

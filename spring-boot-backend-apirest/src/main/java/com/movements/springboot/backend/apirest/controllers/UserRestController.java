@@ -63,18 +63,18 @@ public class UserRestController {
 
 	}
 
+	@Secured("ROLE_ADMIN")
 	@GetMapping("/users")
 	public List<AppUser> index() {
 		return userService.findAll();
 	}
 
-	
+	@Secured("ROLE_ADMIN")
 	@GetMapping("/users/page/{page}")
 	public Page<AppUser> index(@PathVariable Integer page) {
 		Pageable pageable = PageRequest.of(page, 5);
 		return userService.findAll(pageable);
 	}
-	
 	
 	@Secured("ROLE_ADMIN")
 	@GetMapping("/roles")
@@ -83,7 +83,7 @@ public class UserRestController {
 	}
 	
 	
-	//@Secured({"ROLE_USER", "ROLE_ADMIN"})
+	@Secured("ROLE_ADMIN")
 	@GetMapping("/users/{id}")
 	public ResponseEntity<?> show(@PathVariable Long id) {
 
@@ -108,7 +108,7 @@ public class UserRestController {
 
 	}
 	
-	//@Secured("ROLE_ADMIN")
+	@Secured("ROLE_ADMIN")
 	@PostMapping("/users")
 	@ResponseStatus(HttpStatus.CREATED)
 	public ResponseEntity<?> create(@Valid @RequestBody AppUser user, BindingResult result) {
@@ -146,6 +146,7 @@ public class UserRestController {
 
 	}
 
+	
 	@Secured("ROLE_ADMIN")
 	@PutMapping("/users/{id}")
 	public ResponseEntity<?> update(@Valid @RequestBody AppUser user, BindingResult result, @PathVariable Long id) {
@@ -178,7 +179,8 @@ public class UserRestController {
 			currentUser.setLastName(user.getLastName());
 			currentUser.setEmail(user.getEmail());
 			currentUser.setPassword(user.getPassword());
-			currentUser.setRoles(user.getRoles());
+			currentUser.setUserRoles(user.getUserRoles());
+			//currentUser.set.setRoles(user.getRoles());
 
 			updatedUser = userService.save(currentUser);
 
@@ -194,6 +196,7 @@ public class UserRestController {
 		return new ResponseEntity<Map<String, Object>>(response, HttpStatus.CREATED);
 
 	}
+	
 	
 	@Secured("ROLE_ADMIN")
 	@DeleteMapping("/users/{id}")

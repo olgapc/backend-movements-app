@@ -3,6 +3,8 @@ package com.movements.springboot.backend.apirest.models.entity;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.List;
+
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -12,6 +14,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
+import javax.persistence.OneToMany;
 import javax.persistence.PrePersist;
 import javax.persistence.UniqueConstraint;
 import javax.persistence.Table;
@@ -48,12 +51,25 @@ public class AppUser implements Serializable {
 	// @DateTimeFormat(pattern = "dd/MM/yyyy hh:mm:ss")
 	private LocalDateTime createAt;
 
-	@ManyToMany(fetch = FetchType.LAZY)
-	@JoinTable(name = "users_roles", joinColumns = @JoinColumn(name = "user_fk"), inverseJoinColumns = @JoinColumn(name = "role_fk"), uniqueConstraints = {
-			@UniqueConstraint(columnNames = { "user_fk", "role_fk" }) })
-	@JsonIgnoreProperties(value = { "users", "hibernateLazyInitializer", "handler" }, allowSetters = true)
-	private List<Role> roles;
-
+	
+	@OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+	@JoinColumn(name = "user_fk")
+	@JsonIgnoreProperties({ "hibernateLazyInitializer", "handler" })
+	private List<UserRole> userRoles;
+	
+	/* MANY TO MANY APPUSER -- ROLE
+	 * @ManyToMany(fetch = FetchType.LAZY)
+	 * 
+	 * @JoinTable(name = "users_roles", joinColumns = @JoinColumn(name = "user_fk"),
+	 * inverseJoinColumns = @JoinColumn(name = "role_fk"), uniqueConstraints = {
+	 * 
+	 * @UniqueConstraint(columnNames = { "user_fk", "role_fk" }) })
+	 * 
+	 * @JsonIgnoreProperties(value = { "users", "hibernateLazyInitializer",
+	 * "handler" }, allowSetters = true) private List<Role> roles;
+	 */
+	
+	
 	public Long getId() {
 		return id;
 	}
@@ -123,12 +139,20 @@ public class AppUser implements Serializable {
 		createAt = LocalDateTime.now();
 	}
 
-	public List<Role> getRoles() {
-		return roles;
+	
+	
+	/*
+	 * public List<Role> getRoles() { return roles; }
+	 * 
+	 * public void setRoles(List<Role> roles) { this.roles = roles; }
+	 */
+
+	public List<UserRole> getUserRoles() {
+		return userRoles;
 	}
 
-	public void setRoles(List<Role> roles) {
-		this.roles = roles;
+	public void setUserRoles(List<UserRole> userRoles) {
+		this.userRoles = userRoles;
 	}
 
 	public String getComment() {
