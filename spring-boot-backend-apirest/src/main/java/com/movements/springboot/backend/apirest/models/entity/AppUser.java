@@ -47,8 +47,6 @@ public class AppUser implements Serializable {
 	private String comment;
 
 	@Column(name = "create_at", columnDefinition = "TIMESTAMP")
-	// @Temporal(TemporalType.TIMESTAMP)
-	// @DateTimeFormat(pattern = "dd/MM/yyyy hh:mm:ss")
 	private LocalDateTime createAt;
 
 	
@@ -56,19 +54,6 @@ public class AppUser implements Serializable {
 	@JoinColumn(name = "user_fk")
 	@JsonIgnoreProperties({ "hibernateLazyInitializer", "handler" })
 	private List<UserRole> userRoles;
-	
-	/* MANY TO MANY APPUSER -- ROLE
-	 * @ManyToMany(fetch = FetchType.LAZY)
-	 * 
-	 * @JoinTable(name = "users_roles", joinColumns = @JoinColumn(name = "user_fk"),
-	 * inverseJoinColumns = @JoinColumn(name = "role_fk"), uniqueConstraints = {
-	 * 
-	 * @UniqueConstraint(columnNames = { "user_fk", "role_fk" }) })
-	 * 
-	 * @JsonIgnoreProperties(value = { "users", "hibernateLazyInitializer",
-	 * "handler" }, allowSetters = true) private List<Role> roles;
-	 */
-	
 	
 	public Long getId() {
 		return id;
@@ -138,14 +123,6 @@ public class AppUser implements Serializable {
 	public void prePersist() {
 		createAt = LocalDateTime.now();
 	}
-
-	
-	
-	/*
-	 * public List<Role> getRoles() { return roles; }
-	 * 
-	 * public void setRoles(List<Role> roles) { this.roles = roles; }
-	 */
 
 	public List<UserRole> getUserRoles() {
 		return userRoles;
