@@ -51,8 +51,8 @@ INSERT INTO employees (employee_name, nif, naf, email, phone, create_at, company
 INSERT INTO employees (employee_name, nif, naf, email, phone, create_at, company_fk, nif_type) VALUES ('Sofía Esteban Jurado', 'Y6768709A', '08-1234567-09', 'olgapctu2@gmail.com', '677773', NOW(), 2, 'NIE');
 INSERT INTO employees (employee_name, nif, naf, email, phone, create_at, company_fk, nif_type) VALUES ('Maite Esteban Jurado', 'AAEF68708W', '08-1234567-09', 'olgapctu2@gmail.com', '677773', NOW(), 4, 'PASSPORT');
 /* POPULATE USERS */
-INSERT INTO users (id, username, password, enabled, name, last_name, email, create_at) VALUES (1, 'olga','$2a$10$O9wxmH/AeyZZzIS09Wp8YOEMvFnbRVJ8B4dmAMVSGloR62lj.yqXG', 1, 'olga', 'pérez', 'olgapc@gmail.com', NOW());
-INSERT INTO users (id, username, password, enabled, name, last_name, email, create_at) VALUES (2, 'admin','$2a$10$DOMDxjYyfZ/e7RcBfUpzqeaCs8pLgcizuiQWXPkU35nOhZlFcE9MS', 1, 'admin', 'general', 'olgapc2@gmail.com', NOW());
+INSERT INTO users (id, username, password, is_enabled, name, last_name, email, create_at) VALUES (1, 'olga','$2a$10$O9wxmH/AeyZZzIS09Wp8YOEMvFnbRVJ8B4dmAMVSGloR62lj.yqXG', 1, 'olga', 'pérez', 'olgapc@gmail.com', NOW());
+INSERT INTO users (id, username, password, is_enabled, name, last_name, email, create_at) VALUES (2, 'admin','$2a$10$DOMDxjYyfZ/e7RcBfUpzqeaCs8pLgcizuiQWXPkU35nOhZlFcE9MS', 1, 'admin', 'general', 'olgapc2@gmail.com', NOW());
 /* POPULATE ROLES */
 INSERT INTO roles (description, role, create_at) VALUES ('Usuari','ROLE_USER', NOW());
 INSERT INTO roles (description, role, create_at) VALUES ('Administrador','ROLE_ADMIN', NOW());

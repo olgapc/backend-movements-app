@@ -42,7 +42,8 @@ public class AppUser implements Serializable {
 	@Column(length = 60)
 	private String password;
 
-	private Boolean enabled;
+	@Column(name = "is_enabled")
+	private Boolean isEnabled;
 
 	private String comment;
 
@@ -103,13 +104,14 @@ public class AppUser implements Serializable {
 		this.password = password;
 	}
 
-	public Boolean getEnabled() {
-		return enabled;
+	public Boolean getIsEnabled() {
+		return isEnabled;
 	}
 
-	public void setEnabled(Boolean enabled) {
-		this.enabled = enabled;
+	public void setIsEnabled(Boolean isEnabled) {
+		this.isEnabled = isEnabled;
 	}
+	
 
 	public LocalDateTime getCreateAt() {
 		return createAt;

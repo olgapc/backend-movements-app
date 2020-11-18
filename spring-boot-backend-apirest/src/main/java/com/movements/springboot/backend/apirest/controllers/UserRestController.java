@@ -15,26 +15,20 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.annotation.Secured;
-//import org.springframework.security.access.annotation.Secured;
-import org.springframework.ui.Model;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.InitBinder;
-import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.bind.support.SessionStatus;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
-
 import com.movements.springboot.backend.apirest.editors.LowerCaseEditor;
 import com.movements.springboot.backend.apirest.editors.RolesEditor;
 import com.movements.springboot.backend.apirest.models.entity.Role;
@@ -53,7 +47,8 @@ public class UserRestController {
 	@Autowired
 	private RolesEditor rolesEditor;
 
-
+	@Autowired
+	private BCryptPasswordEncoder passwordEncoder;
 
 	@InitBinder
 	public void initBinder(WebDataBinder binder) {
@@ -129,7 +124,8 @@ public class UserRestController {
 		}
 
 		try {
-
+			String passwordBcrypt = passwordEncoder.encode(user.getPassword());
+			user.setPassword(passwordBcrypt);
 			newUser = userService.save(user);
 
 		} catch (DataAccessException e) {
@@ -178,9 +174,11 @@ public class UserRestController {
 			currentUser.setName(user.getName());
 			currentUser.setLastName(user.getLastName());
 			currentUser.setEmail(user.getEmail());
-			currentUser.setPassword(user.getPassword());
+			//currentUser.setPassword(user.getPassword());
 			currentUser.setUserRoles(user.getUserRoles());
+			currentUser.setIsEnabled(user.getIsEnabled());
 			//currentUser.set.setRoles(user.getRoles());
+			currentUser.setComment(user.getComment());
 
 			updatedUser = userService.save(currentUser);
 
