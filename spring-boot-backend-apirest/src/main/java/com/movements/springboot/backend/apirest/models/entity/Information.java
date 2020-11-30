@@ -22,7 +22,7 @@ public class Information implements Serializable {
 	private Long id;
 
 	@NotEmpty
-	@Size(min = 2, max = 250)
+	@Size(min = 2, max = 25, message = "ha de tenir entre 2 i 25 caràcters")
 	private String description;
 
 	private String comment;

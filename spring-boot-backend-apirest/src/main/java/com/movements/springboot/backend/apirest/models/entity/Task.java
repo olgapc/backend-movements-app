@@ -21,6 +21,8 @@ import javax.persistence.PrePersist;
 import javax.persistence.Table;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
+
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -35,6 +37,8 @@ public class Task implements Serializable {
 	private Long id;
 
 	@NotEmpty
+	@Column(nullable=false)
+	@Size(min=3, max=50, message="ha de tenir entre 3 i 50 caràcters")
 	private String description;
 
 	@Column(name = "is_optional_subtask")
@@ -47,6 +51,7 @@ public class Task implements Serializable {
 	private boolean isTemplate;
 
 	@Column(name = "template_name")
+	@Size(max=25, message="ha de tenir màxim 25 caràcters")
 	private String templateName;
 
 	@Column(name = "number_to_calculate_deadline_to_alarm")

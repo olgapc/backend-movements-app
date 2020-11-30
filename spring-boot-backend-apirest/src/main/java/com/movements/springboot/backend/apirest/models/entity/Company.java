@@ -30,16 +30,18 @@ public class Company implements Serializable {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 
-	@Column(name = "company_name")
+	@Column(name = "company_name", nullable= false)
 	@NotEmpty(message = "no pot estar buit")
 	@Size(min = 2, max = 50, message = "ha de tenir entre 2 i 50 caràcters")
 	private String name;
 
 	@NotEmpty(message = "no pot estar buit")
-	@Email(message = "no és una adreça de correu correcta")
+	@Email(message="ha de tenir un format vàlid de mail")
+	@Column(nullable=false)
 	private String email;
 
 	@NotEmpty(message = "no pot estar buit") // notEmpty només per Strings, pels demés tipus notnull
+	@Column(nullable=false)
 	private String phone;
 
 	@Column(name = "create_at", columnDefinition = "TIMESTAMP")
@@ -65,6 +67,8 @@ public class Company implements Serializable {
 
 	private String comment;
 
+	
+	
 	@PrePersist
 	public void prePersist() {
 		createAt = LocalDateTime.now();

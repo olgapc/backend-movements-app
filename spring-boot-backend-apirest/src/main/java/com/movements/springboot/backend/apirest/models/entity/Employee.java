@@ -34,7 +34,7 @@ public class Employee implements Serializable {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 
-	@Column(name = "employee_name")
+	@Column(name = "employee_name", nullable=false)
 	@NotEmpty(message = "no pot estar buit")
 	private String name;
 
@@ -46,7 +46,7 @@ public class Employee implements Serializable {
 
 	private String naf;
 
-	@Email
+	@Email(message="ha de tenir un format vàlid de mail")
 	private String email;
 
 	private String phone;

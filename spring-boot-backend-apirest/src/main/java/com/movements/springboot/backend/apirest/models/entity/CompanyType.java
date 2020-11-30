@@ -9,6 +9,8 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.PrePersist;
 import javax.persistence.Table;
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.Size;
 
 @Entity
 @Table(name = "company_types")
@@ -18,8 +20,14 @@ public class CompanyType implements Serializable {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 
+	@Column(nullable= false)
+	@NotEmpty(message = "no pot estar buit")
+	@Size(min=2, max=6, message = "ha de tenir entre 2 i 6 caràcters")
 	private String code;
 
+	@Column(nullable= false)
+	@NotEmpty(message = "no pot estar buit")
+	@Size(min=5, max=50, message = "ha de tenir entre 5 i 50 caràcters")
 	private String description;
 
 	private String comment;

@@ -12,11 +12,11 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
-import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
 import javax.persistence.PrePersist;
-import javax.persistence.UniqueConstraint;
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.Size;
+import javax.validation.constraints.Email;
 import javax.persistence.Table;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
@@ -28,18 +28,28 @@ public class AppUser implements Serializable {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 
+	@NotEmpty(message="no pot estar buit")
+	@Size(min=4, max=12, message = "ha de tenir entre 4 i 12 caràcters")
 	@Column(unique = true, length = 20)
 	private String username;
 
+	@NotEmpty(message="no pot estar buit")
+	@Size(min=2, max=20, message = "ha de tenir entre 2 i 20 caràcters")
+	@Column(nullable=false)
 	private String name;
 
-	@Column(name = "last_name")
+	@NotEmpty(message="no pot estar buit")
+	@Size(min=2, max=20, message = "ha de tenir entre 2 i 20 caràcters")
+	@Column(name = "last_name", nullable=false)
 	private String lastName;
 
-	@Column(unique = true)
+	@NotEmpty(message="no pot estar buit")
+	@Email(message="ha de tenir un format vàlid de mail")
+	@Column(unique = true, nullable=false)
 	private String email;
 
-	@Column(length = 60)
+	@Column(length = 60, nullable=false)
+	@NotEmpty(message="no pot estar buit")
 	private String password;
 
 	@Column(name = "is_enabled")

@@ -2,16 +2,16 @@ package com.movements.springboot.backend.apirest.models.entity;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
-import java.util.List;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.ManyToMany;
 import javax.persistence.PrePersist;
 import javax.persistence.Table;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.Size;
+
 
 @Entity
 @Table(name = "roles")
@@ -21,17 +21,17 @@ public class Role implements Serializable {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 
-	private String description;
+	
 
 	@Column(unique = true, length = 20)
+	@NotEmpty
+	@Size(min=6, max=20, message="ha de tenir entre 6 i 20 caràcters")
 	private String role;
 
-	/*
-	 * @ManyToMany(mappedBy = "roles")
-	 * 
-	 * @JsonIgnoreProperties(value = { "roles", "hibernateLazyInitializer",
-	 * "handler" }, allowSetters = true) private List<AppUser> users;
-	 */
+	@Column(unique = true, length = 20)
+	@NotEmpty
+	@Size(min=6, max=20, message="ha de tenir entre 6 i 20 caràcters")
+	private String description;
 
 	private String comment;
 

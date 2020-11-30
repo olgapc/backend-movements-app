@@ -294,7 +294,7 @@ public class CompanyRestController {
 		return companyService.findAllCompanyTypes();
 	}
 	
-	@Secured("ROLE_ADMIN")
+	@Secured({"ROLE_USER", "ROLE_ADMIN"})
 	@GetMapping("/company_types/page/{page}")
 	public Page<CompanyType> companyTypesList(@PathVariable Integer page){
 		Pageable pageable = PageRequest.of(page, 5);

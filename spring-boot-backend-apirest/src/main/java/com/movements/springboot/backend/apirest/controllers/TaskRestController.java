@@ -31,8 +31,6 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import com.movements.springboot.backend.apirest.editors.PascalCaseEditor;
 import com.movements.springboot.backend.apirest.models.entity.Information;
 import com.movements.springboot.backend.apirest.models.entity.Task;
-import com.movements.springboot.backend.apirest.models.services.ICompanyService;
-import com.movements.springboot.backend.apirest.models.services.IEmployeeService;
 import com.movements.springboot.backend.apirest.models.services.ITaskService;
 
 @CrossOrigin(origins = { "http://localhost:4200" })
