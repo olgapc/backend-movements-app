@@ -30,7 +30,7 @@ public class Company implements Serializable {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 
-	@Column(name = "company_name", nullable= false)
+	@Column(name = "company_name", unique= true, nullable= false)
 	@NotEmpty(message = "no pot estar buit")
 	@Size(min = 2, max = 50, message = "ha de tenir entre 2 i 50 caràcters")
 	private String name;

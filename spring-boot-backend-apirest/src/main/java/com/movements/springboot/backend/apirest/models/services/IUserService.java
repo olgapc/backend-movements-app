@@ -28,4 +28,8 @@ public interface IUserService {
 	
 	public Role findRoleById(Long id);
 	
+	public Boolean existsByEmail(String email);
+	
+	public Boolean existsByUsername(String username);
+	
 }

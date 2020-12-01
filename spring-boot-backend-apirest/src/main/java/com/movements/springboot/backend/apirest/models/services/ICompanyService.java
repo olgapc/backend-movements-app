@@ -34,5 +34,10 @@ public interface ICompanyService {
 	
 	public void deleteCompanyType(Long id);
 	
+	public Boolean existsByName(String name);
+	
+	public Boolean companyTypeExistsByDescription(String description);
+	
+	public Boolean companyTypeExistsByCode(String code);
 
 }

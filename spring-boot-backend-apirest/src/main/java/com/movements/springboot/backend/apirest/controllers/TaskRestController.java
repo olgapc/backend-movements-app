@@ -130,7 +130,12 @@ public class TaskRestController {
 			newTask = taskService.save(task);
 
 		} catch (DataAccessException e) {
-
+			
+			if(taskService.existsByTemplateName(task.getTemplateName())) {	
+				response.put("errors", "Error al realitzar la inserció a la base de dades! Aquest nom de plantilla ja existeix");
+				return new ResponseEntity<Map<String, Object>>(response, HttpStatus.BAD_REQUEST);
+			}
+			
 			response.put("message", "Error al realitzar la inserció a la base de dades!");
 			response.put("error", e.getMessage().concat(": ").concat(e.getMostSpecificCause().getMessage()));
 			return new ResponseEntity<Map<String, Object>>(response, HttpStatus.INTERNAL_SERVER_ERROR);
@@ -193,6 +198,11 @@ public class TaskRestController {
 			updatedTask = taskService.save(currentTask);
 
 		} catch (DataAccessException e) {
+			
+			if(taskService.existsByTemplateName(task.getTemplateName())) {	
+				response.put("errors", "Error al actualitzar la tasca a la base de dades! Aquest nom de plantilla ja existeix");
+				return new ResponseEntity<Map<String, Object>>(response, HttpStatus.BAD_REQUEST);
+			}
 			response.put("message", "Error al actualitzar la tasca a la base de dades!");
 			response.put("error", e.getMessage().concat(": ").concat(e.getMostSpecificCause().getMessage()));
 			return new ResponseEntity<Map<String, Object>>(response, HttpStatus.INTERNAL_SERVER_ERROR);
@@ -248,6 +258,11 @@ public class TaskRestController {
 
 		} catch (DataAccessException e) {
 			
+			if(taskService.informationExistsByDescription(information.getDescription())) {	
+				response.put("errors", "Error al realitzar la inserció a la base de dades! Aquesta descripció ja existeix");
+				return new ResponseEntity<Map<String, Object>>(response, HttpStatus.BAD_REQUEST);
+			}
+			
 			response.put("message", "Error al realitzar la inserció a la base de dades!");
 			response.put("error", e.getMessage().concat(": ").concat(e.getMostSpecificCause().getMessage()));
 			return new ResponseEntity<Map<String, Object>>(response, HttpStatus.INTERNAL_SERVER_ERROR);
@@ -297,6 +312,12 @@ public class TaskRestController {
 			updatedInformation = taskService.saveInformation(currentInformation);
 
 		} catch (DataAccessException e) {
+			
+			if(taskService.informationExistsByDescription(information.getDescription())) {	
+				response.put("errors", "Error al actualitzar la informació a la base de dades! Aquesta descripció ja existeix");
+				return new ResponseEntity<Map<String, Object>>(response, HttpStatus.BAD_REQUEST);
+			}
+			
 			response.put("message", "Error al actualitzar la informació a la base de dades!");
 			response.put("error", e.getMessage().concat(": ").concat(e.getMostSpecificCause().getMessage()));
 			return new ResponseEntity<Map<String, Object>>(response, HttpStatus.INTERNAL_SERVER_ERROR);

@@ -21,8 +21,6 @@ public class Role implements Serializable {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 
-	
-
 	@Column(unique = true, length = 20)
 	@NotEmpty
 	@Size(min=6, max=20, message="ha de tenir entre 6 i 20 caràcters")

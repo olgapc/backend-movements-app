@@ -32,7 +32,6 @@ import com.movements.springboot.backend.apirest.editors.LowerCaseEditor;
 import com.movements.springboot.backend.apirest.editors.PascalCaseEditor;
 import com.movements.springboot.backend.apirest.editors.UpperCaseEditor;
 import com.movements.springboot.backend.apirest.models.entity.Employee;
-import com.movements.springboot.backend.apirest.models.services.ICompanyService;
 import com.movements.springboot.backend.apirest.models.services.IEmployeeService;
 import com.movements.springboot.backend.apirest.validation.EmployeeValidator;
 
@@ -41,8 +40,8 @@ import com.movements.springboot.backend.apirest.validation.EmployeeValidator;
 @RequestMapping("/api")
 public class EmployeeRestController {
 
-	@Autowired
-	private ICompanyService companyService;
+	//@Autowired
+	//private ICompanyService companyService;
 
 	@Autowired
 	private IEmployeeService employeeService;

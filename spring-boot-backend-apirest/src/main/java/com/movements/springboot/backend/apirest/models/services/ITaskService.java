@@ -44,5 +44,8 @@ public interface ITaskService {
 		
 		public Task fetchByIdWithEmployeeWithCompanyWithTaskInformationWithInformationWithSubtask(Long id);
 		
+		public Boolean existsByTemplateName(String templateName);
+		
+		public Boolean informationExistsByDescription(String description);
 	
 }

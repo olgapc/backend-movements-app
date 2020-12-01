@@ -7,6 +7,8 @@ import com.movements.springboot.backend.apirest.models.entity.CompanyType;
 
 public interface ICompanyTypeDao extends JpaRepository<CompanyType, Long>{
 
+	public Boolean existsByCode(String code);
 	
+	public Boolean existsByDescription(String description);
 	
 }

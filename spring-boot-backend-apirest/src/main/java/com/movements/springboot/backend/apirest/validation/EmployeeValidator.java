@@ -31,21 +31,28 @@ public class EmployeeValidator implements Validator {
 
 				for (char c : chars) {
 					if (Character.isDigit(c)) {
-						errors.rejectValue("name", "Pattern.employee.name");
+						errors.rejectValue("name", "error.employee", "no pot contenir números");
 						break;
 					}
 				}
 			}
 		}
 
-		if (!employee.getNif().matches("[X-Y]?[0-9]{8}[A-Z]?")) {
-			errors.rejectValue("nif", "Pattern.employee.nif");
+		if (employee.getNif() != null) {
+			if (!employee.getNif().isEmpty()) {
+				if (!employee.getNif().matches("[X-Y]?[0-9]{8}[A-Z]?")) {
+					errors.rejectValue("nif", "error.employee", "no segueix el patró establert");
+				}
+			}
 		}
-
-		if (!employee.getNaf().matches("[\\d]{1,2}[-][\\d]{7,8}[-][\\d]{2}")) {
-			errors.rejectValue("naf", "Pattern.employee.naf");
+		
+		if (employee.getNaf() != null) {
+			if (!employee.getNaf().isEmpty()) {
+				if (!employee.getNaf().matches("[\\d]{1,2}[-][\\d]{7,8}[-][\\d]{2}")) {
+					errors.rejectValue("naf", "error.employee", "no és correcte 00-00000000-00");
+				}
+			}
 		}
-
 	}
 
 	public String checkDNI(String dni) {
@@ -60,14 +67,12 @@ public class EmployeeValidator implements Validator {
 		int numNIE = 0;
 
 		dni = dni.toUpperCase();
-		
 
 		// if length up to 9 is a Passport
 		if (dni.length() > 9) {
 
 			isPassport = true;
 			newDNI.append("passport");
-
 
 		} else {
 
@@ -96,19 +101,20 @@ public class EmployeeValidator implements Validator {
 			// check if the last character is a letter
 			if (Character.isLetter(dni.charAt(endIndex))) {
 
-				//lastCapitalLetter = dni.substring(endIndex, dni.length());
+				// lastCapitalLetter = dni.substring(endIndex, dni.length());
 				endIndex--;
 
 			}
 
 			if (!isPassport) {
-						
-				newDNI.append(dni.substring(beginIndex, endIndex+1));
-				
-				if( !checkIfAllAreDigits(newDNI.toString())){
-					isPassport=true;
+
+				newDNI.append(dni.substring(beginIndex, endIndex + 1));
+
+				if (!checkIfAllAreDigits(newDNI.toString())) {
+					isPassport = true;
 					newDNI.replace(0, newDNI.length(), "passport");
-				};
+				}
+				;
 
 				if (!isPassport) {
 
@@ -122,7 +128,7 @@ public class EmployeeValidator implements Validator {
 			}
 
 		}
-		if(firstCapitalLetter!=null && !isPassport) {
+		if (firstCapitalLetter != null && !isPassport) {
 			newDNI.replace(0, 1, firstCapitalLetter);
 		}
 
@@ -130,10 +136,10 @@ public class EmployeeValidator implements Validator {
 
 	}
 
-	/*   
-	 * METHOD ******************************* SPECIFICATION *******************
-	 * int turnLetterToNum(					| This method returns an int, that corresponds to a letter
-	 * 		String letter)					| X --> 0 , Y --> 1 , Z --> 2, in other cases --> 9
+	/*
+	 * METHOD ******************************* SPECIFICATION ******************* int
+	 * turnLetterToNum( | This method returns an int, that corresponds to a letter
+	 * String letter) | X --> 0 , Y --> 1 , Z --> 2, in other cases --> 9
 	 * 
 	 */
 	public int turnLetterToNum(String letter) {
@@ -151,10 +157,10 @@ public class EmployeeValidator implements Validator {
 		}
 	}
 
-	/*   
+	/*
 	 * METHOD ******************************* SPECIFICATION *******************
-	 * boolean checkIfAllAreDigits(  		| This method returns true if all characters are digits
-	 * 		String characters)				| and false if don't
+	 * boolean checkIfAllAreDigits( | This method returns true if all characters are
+	 * digits String characters) | and false if don't
 	 * 
 	 */
 	public boolean checkIfAllAreDigits(String characters) {
@@ -165,10 +171,10 @@ public class EmployeeValidator implements Validator {
 		return true;
 	}
 
-	/*   
+	/*
 	 * METHOD ******************************* SPECIFICATION *******************
-	 * String addZeros(  					| This method add 0 in first place to the dni parameter
-	 * 		String dni)						| until the dni length was 8
+	 * String addZeros( | This method add 0 in first place to the dni parameter
+	 * String dni) | until the dni length was 8
 	 * 
 	 */
 	public String addZeros(String dni) {
@@ -183,17 +189,17 @@ public class EmployeeValidator implements Validator {
 
 	}
 
-	/*   
+	/*
 	 * METHOD ******************************* SPECIFICATION *******************
-	 * String calculateDNILetter( 			| This method returns the control letter corresponding
-	 * 		String numDNI)					| to the DNI number
+	 * String calculateDNILetter( | This method returns the control letter
+	 * corresponding String numDNI) | to the DNI number
 	 * 
 	 */
 	public String calculateDNILetter(String numDNI) {
 		char[] letterDNI = { 'T', 'R', 'W', 'A', 'G', 'M', 'Y', 'F', 'P', 'D', 'X', 'B', 'N', 'J', 'Z', 'S', 'Q', 'V',
 				'H', 'L', 'C', 'K', 'E' };
 		int numDNI2 = Integer.parseInt(numDNI);
-		
+
 		int substract = numDNI2 % 23;
 
 		String letter = String.valueOf(letterDNI[substract]);

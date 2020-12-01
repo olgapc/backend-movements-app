@@ -113,7 +113,7 @@ public class UserRestController {
 		Map<String, Object> response = new HashMap<>();
 
 		if (result.hasErrors()) {
-
+			
 			List<String> errors = result.getFieldErrors()
 					.stream()
 					.map(err -> "El camp '" + err.getField() + "' " + err.getDefaultMessage()) 
@@ -130,7 +130,17 @@ public class UserRestController {
 
 		} catch (DataAccessException e) {
 			
-			response.put("message", "Error al realitzar l'inserció a la base de dades!");
+			if(userService.existsByUsername(user.getUsername())) {	
+				response.put("errors", "Error al realitzar la inserció a la base de dades! Aquest nom d'usuari ja existeix");
+				return new ResponseEntity<Map<String, Object>>(response, HttpStatus.BAD_REQUEST);
+			}
+			
+			if(userService.existsByEmail(user.getEmail())) {	
+				response.put("errors", "Error al realitzar la inserció a la base de dades! Aquest email ja existeix");
+				return new ResponseEntity<Map<String, Object>>(response, HttpStatus.BAD_REQUEST);
+			}
+			
+			response.put("message", "Error al realitzar la inserció a la base de dades!");
 			response.put("error", e.getMessage().concat(": ").concat(e.getMostSpecificCause().getMessage()));
 			return new ResponseEntity<Map<String, Object>>(response, HttpStatus.INTERNAL_SERVER_ERROR);
 		
@@ -177,12 +187,21 @@ public class UserRestController {
 			//currentUser.setPassword(user.getPassword());
 			currentUser.setUserRoles(user.getUserRoles());
 			currentUser.setIsEnabled(user.getIsEnabled());
-			//currentUser.set.setRoles(user.getRoles());
 			currentUser.setComment(user.getComment());
 
 			updatedUser = userService.save(currentUser);
 
 		} catch (DataAccessException e) {
+			
+			if(userService.existsByUsername(user.getUsername())) {	
+				response.put("errors", "Error al actualitzar l'usuari a la base de dades! Aquest nom d'usuari ja existeix");
+				return new ResponseEntity<Map<String, Object>>(response, HttpStatus.BAD_REQUEST);
+			}
+			
+			if(userService.existsByEmail(user.getEmail())) {	
+				response.put("errors", "Error al actualitzar l'usuari a la base de dades! Aquest email ja existeix");
+				return new ResponseEntity<Map<String, Object>>(response, HttpStatus.BAD_REQUEST);
+			}
 			response.put("message", "Error al actualitzar l'usuari a la base de dades!");
 			response.put("error", e.getMessage().concat(": ").concat(e.getMostSpecificCause().getMessage()));
 			return new ResponseEntity<Map<String, Object>>(response, HttpStatus.INTERNAL_SERVER_ERROR);

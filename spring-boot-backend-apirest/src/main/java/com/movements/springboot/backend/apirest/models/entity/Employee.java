@@ -21,6 +21,8 @@ import javax.persistence.Table;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Past;
+import javax.validation.constraints.Size;
+
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.movements.springboot.backend.apirest.models.enums.Gender;
@@ -36,6 +38,7 @@ public class Employee implements Serializable {
 
 	@Column(name = "employee_name", nullable=false)
 	@NotEmpty(message = "no pot estar buit")
+	@Size(min = 5, max = 50, message = "ha de tenir entre 5 i 50 caràcters")
 	private String name;
 
 	private String nif;
@@ -44,6 +47,7 @@ public class Employee implements Serializable {
 	@Enumerated(EnumType.STRING)
 	private NifTypes nifType;
 
+	@Column(nullable=true)
 	private String naf;
 
 	@Email(message="ha de tenir un format vàlid de mail")
@@ -63,7 +67,6 @@ public class Employee implements Serializable {
 	private String comment;
 
 	@Column(name = "create_at", columnDefinition = "TIMESTAMP")
-
 	private LocalDateTime createAt;
 
 	@OneToMany(mappedBy = "employee", fetch = FetchType.LAZY)
@@ -80,7 +83,6 @@ public class Employee implements Serializable {
 
 	public Employee() {
 		tasks = new ArrayList<Task>();
-		nifType = nifType.DNI;
 
 	}
 

@@ -121,5 +121,19 @@ public class UserServiceImpl implements IUserService, UserDetailsService{
 	public AppUser findByEmail(String email) {
 		return userDao.findByEmail(email);
 	}
+
+	@Override
+	@Transactional(readOnly=true)
+	public Boolean existsByEmail(String email) {
+		return userDao.existsByEmail(email);
+	}
+
+	@Override
+	@Transactional(readOnly=true)
+	public Boolean existsByUsername(String username) {
+		return userDao.existsByUsername(username);
+	}
+	
+	
 	
 }

@@ -122,6 +122,20 @@ public class TaskServiceImpl implements ITaskService{
 	public Task fetchByIdWithEmployeeWithCompanyWithTaskInformationWithInformationWithSubtask(Long id) {
 		return taskDao.fetchByIdWithEmployeeWithCompanyWithTaskInformationWithInformationWithSubtask(id);
 	}
+
+
+	@Override
+	@Transactional(readOnly=true)
+	public Boolean existsByTemplateName(String templateName) {
+		return taskDao.existsByTemplateName(templateName);
+	}
+
+
+	@Override
+	@Transactional(readOnly=true)
+	public Boolean informationExistsByDescription(String description) {
+		return informationDao.existsByDescription(description);
+	}
 	
 	
 	

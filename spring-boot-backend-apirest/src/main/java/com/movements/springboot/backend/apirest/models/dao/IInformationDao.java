@@ -15,5 +15,7 @@ public interface IInformationDao extends JpaRepository<Information, Long>{
 	
 	public List<Information> findByDescriptionContainingIgnoreCase(String term);
 	
+	public Boolean existsByDescription(String description);
+	
 	
 }

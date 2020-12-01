@@ -137,6 +137,11 @@ public class CompanyRestController {
 
 		} catch (DataAccessException e) {
 			
+			if(companyService.existsByName(company.getName())) {	
+				response.put("errors", "Error al realitzar la inserció a la base de dades! Aquest nom ja existeix");
+				return new ResponseEntity<Map<String, Object>>(response, HttpStatus.BAD_REQUEST);
+			}
+			
 			response.put("message", "Error al realitzar la inserció a la base de dades!");
 			response.put("error", e.getMessage().concat(": ").concat(e.getMostSpecificCause().getMessage()));
 			return new ResponseEntity<Map<String, Object>>(response, HttpStatus.INTERNAL_SERVER_ERROR);
@@ -187,6 +192,12 @@ public class CompanyRestController {
 			updatedCompany = companyService.save(currentCompany);
 
 		} catch (DataAccessException e) {
+			
+			if(companyService.existsByName(company.getName())) {	
+				response.put("errors", "Error al actualitzar l'empresa a la base de dades! Aquest nom ja existeix");
+				return new ResponseEntity<Map<String, Object>>(response, HttpStatus.BAD_REQUEST);
+			}
+			
 			response.put("message", "Error al actualitzar l'empresa a la base de dades!");
 			response.put("error", e.getMessage().concat(": ").concat(e.getMostSpecificCause().getMessage()));
 			return new ResponseEntity<Map<String, Object>>(response, HttpStatus.INTERNAL_SERVER_ERROR);
@@ -338,6 +349,14 @@ public class CompanyRestController {
 
 		} catch (DataAccessException e) {
 			
+			if(companyService.companyTypeExistsByCode(companyType.getCode())) {	
+				response.put("errors", "Error al realitzar la inserció a la base de dades! Aquest codi ja existeix");
+				return new ResponseEntity<Map<String, Object>>(response, HttpStatus.BAD_REQUEST);
+			}
+			if(companyService.companyTypeExistsByDescription(companyType.getDescription())) {	
+				response.put("errors", "Error al realitzar la inserció a la base de dades! Aquesta descripció ja existeix");
+				return new ResponseEntity<Map<String, Object>>(response, HttpStatus.BAD_REQUEST);
+			}
 			response.put("message", "Error al realitzar la inserció a la base de dades!");
 			response.put("error", e.getMessage().concat(": ").concat(e.getMostSpecificCause().getMessage()));
 			return new ResponseEntity<Map<String, Object>>(response, HttpStatus.INTERNAL_SERVER_ERROR);
@@ -386,6 +405,15 @@ public class CompanyRestController {
 			updatedCompanyType = companyService.saveCompanyType(updatedCompanyType);
 
 		} catch (DataAccessException e) {
+			
+			if(companyService.companyTypeExistsByCode(companyType.getCode())) {	
+				response.put("errors", "Error al actualitzar la informació a la base de dades! Aquest codi ja existeix");
+				return new ResponseEntity<Map<String, Object>>(response, HttpStatus.BAD_REQUEST);
+			}
+			if(companyService.companyTypeExistsByDescription(companyType.getDescription())) {	
+				response.put("errors", "Error al actualitzar la informació a la base de dades! Aquesta descripció ja existeix");
+				return new ResponseEntity<Map<String, Object>>(response, HttpStatus.BAD_REQUEST);
+			}
 			response.put("message", "Error al actualitzar la informació a la base de dades!");
 			response.put("error", e.getMessage().concat(": ").concat(e.getMostSpecificCause().getMessage()));
 			return new ResponseEntity<Map<String, Object>>(response, HttpStatus.INTERNAL_SERVER_ERROR);

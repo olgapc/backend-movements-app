@@ -38,7 +38,7 @@ public class Task implements Serializable {
 
 	@NotEmpty
 	@Column(nullable=false)
-	@Size(min=3, max=50, message="ha de tenir entre 3 i 50 caràcters")
+	@Size(min=3, max=80, message="ha de tenir entre 3 i 80 caràcters")
 	private String description;
 
 	@Column(name = "is_optional_subtask")
@@ -50,7 +50,7 @@ public class Task implements Serializable {
 	@Column(name = "is_template")
 	private boolean isTemplate;
 
-	@Column(name = "template_name")
+	@Column(name = "template_name", unique= true)
 	@Size(max=25, message="ha de tenir màxim 25 caràcters")
 	private String templateName;
 

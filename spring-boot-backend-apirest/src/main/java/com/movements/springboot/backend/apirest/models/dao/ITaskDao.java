@@ -14,5 +14,6 @@ public interface ITaskDao extends JpaRepository<Task, Long>{
 			+ "where t.id = ?#{[0]}")
 	public Task fetchByIdWithEmployeeWithCompanyWithTaskInformationWithInformationWithSubtask(Long id);
 	
+	public Boolean existsByTemplateName(String templateName);
 	
 }

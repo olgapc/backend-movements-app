@@ -66,6 +66,13 @@ public class CompanyServiceImpl implements ICompanyService{
 	public List<Company> findCompanyByName(String term) {
 		return companyDao.findByNameLikeIgnoreCase("%"+term+"%");
 	}
+	
+	@Override
+	@Transactional
+	public Boolean existsByName(String name) {
+		return companyDao.existsByName(name);
+	}
+	
 
 	@Override
 	@Transactional(readOnly = true)
@@ -99,6 +106,20 @@ public class CompanyServiceImpl implements ICompanyService{
 		companyTypeDao.deleteById(id);
 		
 	}
+
+	@Override
+	@Transactional(readOnly = true)
+	public Boolean companyTypeExistsByDescription(String description) {
+		return companyTypeDao.existsByDescription(description);
+	}
+
+	@Override
+	@Transactional(readOnly = true)
+	public Boolean companyTypeExistsByCode(String code) {
+		return companyTypeDao.existsByCode(code);
+	}
+
+
 	
 	
 }

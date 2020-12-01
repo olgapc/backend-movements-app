@@ -20,12 +20,12 @@ public class CompanyType implements Serializable {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 
-	@Column(nullable= false)
+	@Column(nullable= false, unique= true)
 	@NotEmpty(message = "no pot estar buit")
 	@Size(min=2, max=6, message = "ha de tenir entre 2 i 6 caràcters")
 	private String code;
 
-	@Column(nullable= false)
+	@Column(nullable= false, unique= true)
 	@NotEmpty(message = "no pot estar buit")
 	@Size(min=5, max=50, message = "ha de tenir entre 5 i 50 caràcters")
 	private String description;

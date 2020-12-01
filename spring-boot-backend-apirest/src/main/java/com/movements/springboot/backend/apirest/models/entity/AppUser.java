@@ -2,6 +2,7 @@ package com.movements.springboot.backend.apirest.models.entity;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.CascadeType;
@@ -65,6 +66,13 @@ public class AppUser implements Serializable {
 	@JoinColumn(name = "user_fk")
 	@JsonIgnoreProperties({ "hibernateLazyInitializer", "handler" })
 	private List<UserRole> userRoles;
+	
+	
+	public AppUser() {
+		userRoles = new ArrayList<UserRole>();
+	}
+	
+	
 	
 	public Long getId() {
 		return id;

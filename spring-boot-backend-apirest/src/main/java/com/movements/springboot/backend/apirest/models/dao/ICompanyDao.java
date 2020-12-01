@@ -23,5 +23,5 @@ public interface ICompanyDao extends JpaRepository<Company, Long>{
 			+ "where c.id = ?#{[0]}")
 	public Company fetchByIdWithTasksWithEmployees(Long id);
 	
-	
+	public Boolean existsByName(String name);
 }
