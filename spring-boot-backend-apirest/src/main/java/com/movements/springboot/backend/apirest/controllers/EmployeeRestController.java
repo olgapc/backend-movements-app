@@ -127,11 +127,10 @@ public class EmployeeRestController {
 	@PostMapping("/employees")
 	@ResponseStatus(HttpStatus.CREATED)
 	public ResponseEntity<?> create(@Valid @RequestBody Employee employee, BindingResult result) {
-
+		
 		Employee newEmployee = null;
 		
 		Map<String, Object> response = new HashMap<>();
-		
 		if (result.hasErrors()) {
 			
 			List<String> errors = result.getFieldErrors()
@@ -150,6 +149,7 @@ public class EmployeeRestController {
 		} catch (DataAccessException e) {
 			
 			response.put("message", "Error al realitzar la inserció a la base de dades!");
+
 			response.put("error", e.getMessage().concat(": ").concat(e.getMostSpecificCause().getMessage()));
 			return new ResponseEntity<Map<String, Object>>(response, HttpStatus.INTERNAL_SERVER_ERROR);
 		

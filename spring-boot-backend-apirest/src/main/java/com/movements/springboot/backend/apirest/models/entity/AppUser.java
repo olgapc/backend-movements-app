@@ -29,28 +29,28 @@ public class AppUser implements Serializable {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 
-	@NotEmpty(message="no pot estar buit")
-	@Size(min=4, max=12, message = "ha de tenir entre 4 i 12 caràcters")
+	@NotEmpty(message = "no pot estar buit")
+	@Size(min = 4, max = 12, message = "ha de tenir entre 4 i 12 caràcters")
 	@Column(unique = true, length = 20)
 	private String username;
 
-	@NotEmpty(message="no pot estar buit")
-	@Size(min=2, max=20, message = "ha de tenir entre 2 i 20 caràcters")
-	@Column(nullable=false)
+	@NotEmpty(message = "no pot estar buit")
+	@Size(min = 2, max = 20, message = "ha de tenir entre 2 i 20 caràcters")
+	@Column(nullable = false)
 	private String name;
 
-	@NotEmpty(message="no pot estar buit")
-	@Size(min=2, max=20, message = "ha de tenir entre 2 i 20 caràcters")
-	@Column(name = "last_name", nullable=false)
+	@NotEmpty(message = "no pot estar buit")
+	@Size(min = 2, max = 20, message = "ha de tenir entre 2 i 20 caràcters")
+	@Column(name = "last_name", nullable = false)
 	private String lastName;
 
-	@NotEmpty(message="no pot estar buit")
-	@Email(message="ha de tenir un format vàlid de mail")
-	@Column(unique = true, nullable=false)
+	@NotEmpty(message = "no pot estar buit")
+	@Email(message = "ha de tenir un format vàlid de mail")
+	@Column(unique = true, nullable = false)
 	private String email;
 
-	@Column(length = 60, nullable=false)
-	@NotEmpty(message="no pot estar buit")
+	@Column(length = 60, nullable = false)
+	@NotEmpty(message = "no pot estar buit")
 	private String password;
 
 	@Column(name = "is_enabled")
@@ -61,19 +61,20 @@ public class AppUser implements Serializable {
 	@Column(name = "create_at", columnDefinition = "TIMESTAMP")
 	private LocalDateTime createAt;
 
-	
 	@OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
 	@JoinColumn(name = "user_fk")
 	@JsonIgnoreProperties({ "hibernateLazyInitializer", "handler" })
 	private List<UserRole> userRoles;
-	
-	
+
+	@OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy="currentAssignedUser")
+	@JsonIgnoreProperties(value= { "hibernateLazyInitializer", "handler", "company", "employee", "subtasks", "mainTask", "currentAssignedUser" }, allowSetters = true)
+	private List<Task> currentAssignedTasks;
+
 	public AppUser() {
 		userRoles = new ArrayList<UserRole>();
+		currentAssignedTasks = new ArrayList<Task>();
 	}
-	
-	
-	
+
 	public Long getId() {
 		return id;
 	}
@@ -129,7 +130,6 @@ public class AppUser implements Serializable {
 	public void setIsEnabled(Boolean isEnabled) {
 		this.isEnabled = isEnabled;
 	}
-	
 
 	public LocalDateTime getCreateAt() {
 		return createAt;
@@ -160,5 +160,20 @@ public class AppUser implements Serializable {
 		this.comment = comment;
 	}
 
+	public List<Task> getCurrentAssignedTasks() {
+		return currentAssignedTasks;
+	}
+
+	public void setCurrentAssignedTasks(List<Task> currentAssignedTasks) {
+		this.currentAssignedTasks = currentAssignedTasks;
+	}
+	
+	public void addCurrentAssignedTasks(Task task) {
+		if(currentAssignedTasks.contains(task))
+			return;
+		currentAssignedTasks.add(task);
+		task.setCurrentAssignedUser(this);
+	}
+	
 	private static final long serialVersionUID = 1L;
 }

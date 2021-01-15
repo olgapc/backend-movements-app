@@ -17,6 +17,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import javax.persistence.PrePersist;
 import javax.persistence.Table;
 import javax.validation.constraints.NotEmpty;
@@ -32,41 +33,96 @@ import com.movements.springboot.backend.apirest.models.enums.TimesType;
 @Table(name = "tasks")
 public class Task implements Serializable {
 
+	//******GENERAL ATTRIBUTES******
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 
-	@NotEmpty
-	@Column(nullable=false)
-	@Size(min=3, max=80, message="ha de tenir entre 3 i 80 caràcters")
-	private String description;
-
-	@Column(name = "is_optional_subtask")
-	private boolean isOptionalSubtask;
-
+	@Column(name = "create_at", columnDefinition = "TIMESTAMP")
+	private LocalDateTime createAt;
+	
 	@Column(name = "is_to_send")
 	private boolean isToSend;
 
-	@Column(name = "is_template")
-	private boolean isTemplate;
-
-	@Column(name = "template_name", unique= true)
-	@Size(max=25, message="ha de tenir màxim 25 caràcters")
-	private String templateName;
-
-	@Column(name = "number_to_calculate_deadline_to_alarm")
-	private String numberToCalculateDeadlineToAlarm;
+	public String comment;
 
 	@Column(name = "type_calculation_deadline")
 	@Enumerated(EnumType.STRING)
 	private TimesType typeCalculationDeadline;
+	
+	@OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+	@JoinColumn(name = "task_fk")
+	@JsonIgnoreProperties({ "hibernateLazyInitializer", "handler" })
+	private List<TaskInformation> taskInformations;
+	
+	@ManyToOne(fetch = FetchType.LAZY, optional = true)
+	@JsonIgnoreProperties(value = { "hibernateLazyInitializer", "handler", "createAt", "currentAssignedTasks" }, allowSetters = true)
+	@JoinColumn(name="assigned_user_fk")
+	private AppUser currentAssignedUser;
+	
+	
+	/*
+	 * @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+	 * 
+	 * @JoinColumn(name = "before_task_fk")
+	 * 
+	 * @JsonIgnoreProperties({ "hibernateLazyInitializer", "handler" }) private
+	 * List<AfterBeforeTask> beforeTasks;
+	 * 
+	 * @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+	 * 
+	 * @JoinColumn(name = "after_task_fk")
+	 * 
+	 * @JsonIgnoreProperties({ "hibernateLazyInitializer", "handler" }) private
+	 * List<AfterBeforeTask> afterTasks;
+	 */
+	
+	@Column(name = "is_periodically")
+	private boolean isPeriodically;
+	
+	
+	
+	
+	//********ONLY TEMPLATE ATTRIBUTES********
+	@Column(name = "is_template")
+	private boolean isTemplate;
+
+	@Column(name = "template_name", nullable= true)
+	@Size(max = 25, message = "ha de tenir màxim 25 caràcters")
+	private String templateName;
+	
+	
+	
+	
+	//********ONLY FOR ALL TASK ATTRIBUTES (NOT TEMPLATE)*********
+	
+	//@NotEmpty
+	@Column(nullable = true)
+	@Size(min = 3, max = 80, message = "ha de tenir entre 3 i 80 caràcters")
+	private String description;
+	
+	@Column(name = "is_done")
+	private boolean isDone;
+
+	@Column(name = "done_at")
+	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
+	private LocalDateTime doneAt;
+	
+	@Column(name= "done_by")
+	private AppUser doneBy;
+
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "maintask_fk")
+	@JsonIgnoreProperties(value = { "subtasks", "employee", "company", "hibernateLazyInitializer", "handler",
+			"mainTask" }, allowSetters = true)
+	private Task mainTask;
+
+	@Column(name = "is_visible")
+	private boolean isVisible;
 
 	@Column(name = "deadline", columnDefinition = "DATE")
-	@NotNull(message = "no pot estar buit")
+	//@NotNull(message = "no pot estar buit")
 	private LocalDate deadline;
-
-	@Column(name = "create_at", columnDefinition = "TIMESTAMP")
-	private LocalDateTime createAt;
 
 	@ManyToOne(optional = true, fetch = FetchType.LAZY)
 	@JsonIgnoreProperties({ "tasks", "hibernateLazyInitializer", "handler", "company", "createAt" })
@@ -78,40 +134,49 @@ public class Task implements Serializable {
 	@JsonIgnoreProperties({ "tasks", "hibernateLazyInitializer", "handler", "employees", "createAt" })
 	@JoinColumn(name = "company_fk")
 	private Company company;
+	
+	
+	//*******ONLY MAINTASK ATTRIBUTES*********
+	@Column(name = "is_maintask")
+	private boolean isMainTask;
 
 	@OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
 	@JoinColumn(name = "task_fk")
 	@JsonIgnoreProperties({ "hibernateLazyInitializer", "handler" })
-	private List<TaskInformation> taskInformations;
-
-	@Column(name = "is_done")
-	private boolean isDone;
-
-	@Column(name = "done_at")
-	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
-	private LocalDateTime doneAt;
-
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "maintask_fk")
-	@JsonIgnoreProperties(value = { "subtasks", "employee", "company", "hibernateLazyInitializer", "handler",
-			"mainTask" }, allowSetters = true)
-	private Task mainTask;
+	private List<TaskInformation> taskInformationsStickedToMainTask;
 
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "mainTask")
-	@JsonIgnoreProperties(value = { "mainTask", "employee", "company", "hibernateLazyInitializer", "handler",
+	@JsonIgnoreProperties(value = { "mainTask", "hibernateLazyInitializer", "handler",
 			"subtasks" }, allowSetters = true)
 	private List<Task> subtasks;
-
-	@Column(name = "is_maintask")
-	private boolean isMainTask;
-
-	public String comment;
-
+	
+	
+	
+	
+	//*******ONLY SUBTASK ATTRIBUTES*********
+	@Column(name = "number_to_calculate_deadline")
+	private String numberToCalculateDeadline;
+	
+	
+	
+	//****CONSTRUCTOR*****
+	
 	public Task() {
-		taskInformations = new ArrayList<>();
+		taskInformations = new ArrayList<TaskInformation>();
 		subtasks = new ArrayList<>();
+		/*
+		 * beforeTasks = new ArrayList<>(); afterTasks = new ArrayList<>();
+		 */
+		taskInformationsStickedToMainTask = new ArrayList<>();
 	}
 
+	//***PREPERSIST*******
+	@PrePersist
+	public void prePersist() {
+		createAt = LocalDateTime.now();
+	}
+
+	//****GETTERS AND SETTERS ******
 	public Long getId() {
 		return id;
 	}
@@ -128,16 +193,28 @@ public class Task implements Serializable {
 		this.description = description;
 	}
 
-	public boolean isOptionalSubtask() {
-		return isOptionalSubtask;
-	}
-
 	public boolean getIsToSend() {
 		return isToSend;
 	}
 
 	public boolean getIsTemplate() {
 		return isTemplate;
+	}
+
+	public boolean getIsVisible() {
+		return isVisible;
+	}
+
+	public boolean getIsPeriodically() {
+		return isPeriodically;
+	}
+
+	public void setIsPeriodically(boolean isPeriodically) {
+		this.isPeriodically = isPeriodically;
+	}
+
+	public void setIsVisible(boolean isVisible) {
+		this.isVisible = isVisible;
 	}
 
 	public String getTemplateName() {
@@ -148,12 +225,12 @@ public class Task implements Serializable {
 		this.templateName = templateName;
 	}
 
-	public String getNumberToCalculateDeadlineToAlarm() {
-		return numberToCalculateDeadlineToAlarm;
+	public String getNumberToCalculateDeadline() {
+		return numberToCalculateDeadline;
 	}
 
-	public void setNumberToCalculateDeadlineToAlarm(String numberToCalculteDeadlineToAlarm) {
-		this.numberToCalculateDeadlineToAlarm = numberToCalculteDeadlineToAlarm;
+	public void setNumberToCalculateDeadline(String numberToCalculteDeadline) {
+		this.numberToCalculateDeadline = numberToCalculteDeadline;
 	}
 
 	public TimesType getTypeCalculationDeadline() {
@@ -201,17 +278,51 @@ public class Task implements Serializable {
 	}
 
 	public void setTaskInformations(List<TaskInformation> taskInformations) {
-
 		this.taskInformations = taskInformations;
 	}
 
-	public void addTaskInformation(TaskInformation taskInformation) {
-		taskInformations.add(taskInformation);
+	/*
+	 * public List<AfterBeforeTask> getBeforeTasks() { return beforeTasks; }
+	 * 
+	 * public void setBeforeTasks(List<AfterBeforeTask> beforeTasks) {
+	 * this.beforeTasks = beforeTasks; }
+	 * 
+	 * public List<AfterBeforeTask> getAfterTasks() { return afterTasks; }
+	 * 
+	 * public void setAfterTasks(List<AfterBeforeTask> afterTasks) { this.afterTasks
+	 * = afterTasks; }
+	 */
+
+	public void setToSend(boolean isToSend) {
+		this.isToSend = isToSend;
 	}
 
-	@PrePersist
-	public void prePersist() {
-		createAt = LocalDateTime.now();
+	public void setTemplate(boolean isTemplate) {
+		this.isTemplate = isTemplate;
+	}
+
+	public void setDone(boolean isDone) {
+		this.isDone = isDone;
+	}
+
+	public AppUser getCurrentAssignedUser() {
+		return currentAssignedUser;
+	}
+
+	public void setCurrentAssignedUser(AppUser currentAssignedUser) {
+		this.currentAssignedUser = currentAssignedUser;
+	}
+
+	public AppUser getDoneBy() {
+		return doneBy;
+	}
+
+	public void setDoneBy(AppUser doneBy) {
+		this.doneBy = doneBy;
+	}
+
+	public void setMainTask(boolean isMainTask) {
+		this.isMainTask = isMainTask;
 	}
 
 	public LocalDateTime getDoneAt() {
@@ -230,10 +341,6 @@ public class Task implements Serializable {
 		this.mainTask = mainTask;
 	}
 
-	public void setIsOptionalSubtask(boolean isOptionalSubtask) {
-		this.isOptionalSubtask = isOptionalSubtask;
-	}
-
 	public void setIsToSend(boolean isToSend) {
 		this.isToSend = isToSend;
 	}
@@ -250,9 +357,6 @@ public class Task implements Serializable {
 		this.subtasks = subtasks;
 	}
 
-	public void addSubtask(Task subtask) {
-		subtasks.add(subtask);
-	}
 
 	public boolean getIsDone() {
 		return isDone;
@@ -277,19 +381,49 @@ public class Task implements Serializable {
 	public void setComment(String comment) {
 		this.comment = comment;
 	}
+	
+	public List<TaskInformation> getTaskInformationsStickedToMainTask() {
+		return taskInformationsStickedToMainTask;
+	}
 
+	public void setTaskInformationsStickedToMainTask(List<TaskInformation> taskInformationsStickedToMainTask) {
+		this.taskInformationsStickedToMainTask = taskInformationsStickedToMainTask;
+	}
+	
+
+
+
+	//*******ADD METHODS******
+	/*
+	 * public void addBeforeTasks(AfterBeforeTask beforeTask) {
+	 * this.beforeTasks.add(beforeTask); }
+	 * 
+	 * public void addAfterTasks(AfterBeforeTask afterTask) {
+	 * this.afterTasks.add(afterTask); }
+	 */
+	
+	public void addTaskInformation(TaskInformation taskInformation) {
+		taskInformations.add(taskInformation);
+	}
+
+	public void addSubtask(Task subtask) {
+		subtasks.add(subtask);
+	}
+	
+
+	
+	//******HASHCODE AND EQUALS METHODS******
 	@Override
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
 		result = prime * result + ((id == null) ? 0 : id.hashCode());
 		result = prime * result + ((description == null) ? 0 : description.hashCode());
-		result = prime * result + (isOptionalSubtask ? 1231 : 1237);
 		result = prime * result + (isToSend ? 1231 : 1237);
 		result = prime * result + (isTemplate ? 1231 : 1237);
 		result = prime * result + ((templateName == null) ? 0 : templateName.hashCode());
 		result = prime * result
-				+ ((numberToCalculateDeadlineToAlarm == null) ? 0 : numberToCalculateDeadlineToAlarm.hashCode());
+				+ ((numberToCalculateDeadline == null) ? 0 : numberToCalculateDeadline.hashCode());
 		result = prime * result + ((typeCalculationDeadline == null) ? 0 : typeCalculationDeadline.hashCode());
 		result = prime * result + ((deadline == null) ? 0 : deadline.hashCode());
 		result = prime * result + ((createAt == null) ? 0 : createAt.hashCode());
@@ -331,10 +465,6 @@ public class Task implements Serializable {
 			return false;
 		}
 
-		if (isOptionalSubtask != other.isOptionalSubtask) {
-			return false;
-		}
-
 		if (isToSend != other.isToSend) {
 			return false;
 		}
@@ -350,11 +480,11 @@ public class Task implements Serializable {
 			return false;
 		}
 
-		if (numberToCalculateDeadlineToAlarm == null) {
-			if (other.numberToCalculateDeadlineToAlarm == null) {
+		if (numberToCalculateDeadline == null) {
+			if (other.numberToCalculateDeadline == null) {
 				return false;
 			}
-		} else if (!numberToCalculateDeadlineToAlarm.equals(other.numberToCalculateDeadlineToAlarm)) {
+		} else if (!numberToCalculateDeadline.equals(other.numberToCalculateDeadline)) {
 			return false;
 		}
 

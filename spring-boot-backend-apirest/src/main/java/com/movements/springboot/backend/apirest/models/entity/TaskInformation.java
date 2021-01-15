@@ -39,6 +39,12 @@ public class TaskInformation implements Serializable {
 
 	@Column(name = "done")
 	private boolean done;
+	
+	@Column(name= "done_by")
+	private AppUser doneBy;
+	
+	@Column(name = "is_sticked")
+	private boolean isSticked;
 
 	public TaskInformation() {
 
@@ -96,6 +102,24 @@ public class TaskInformation implements Serializable {
 	public void setDone(boolean done) {
 		this.done = done;
 	}
+	
+	public AppUser getDoneBy() {
+		return doneBy;
+	}
+
+	public void setDoneBy(AppUser doneBy) {
+		this.doneBy = doneBy;
+	}
+
+	public boolean getIsSticked() {
+		return isSticked;
+	}
+
+	public void setSticked(boolean isSticked) {
+		this.isSticked = isSticked;
+	}
+
+
 
 	private static final long serialVersionUID = 1L;
 

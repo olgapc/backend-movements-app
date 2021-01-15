@@ -20,6 +20,8 @@ public interface ITaskService {
 		public Task save(Task task);
 		
 		public Task findTaskById(Long id);
+		
+		public List<Task> findByIdAndDescription(Long id, String description);
 
 		public void delete(Long id);
 		
@@ -47,5 +49,10 @@ public interface ITaskService {
 		public Boolean existsByTemplateName(String templateName);
 		
 		public Boolean informationExistsByDescription(String description);
+		
+		//subtasks methods
+		public List<Task> findAllTemplateTasks();
+		
+		public Page<Task> findAllTemplateTasks(Pageable pageable);
 	
 }

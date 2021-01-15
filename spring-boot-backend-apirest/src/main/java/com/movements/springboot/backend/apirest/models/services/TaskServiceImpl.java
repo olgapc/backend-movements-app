@@ -37,14 +37,14 @@ public class TaskServiceImpl implements ITaskService{
 	@Override
 	@Transactional(readOnly = true)
 	public List<Task> findAll() {		
-		return (List<Task>) taskDao.findAll();
+		return (List<Task>) taskDao.findByIsTemplateFalseAndIsMainTaskTrue();
 	}
 
 	
 	@Override
 	@Transactional(readOnly = true)
 	public Page<Task> findAll(Pageable pageable) {
-		return taskDao.findAll(pageable);
+		return taskDao.findByIsTemplateFalseAndIsMainTaskTrue(pageable);
 	}
 
 	
@@ -135,6 +135,27 @@ public class TaskServiceImpl implements ITaskService{
 	@Transactional(readOnly=true)
 	public Boolean informationExistsByDescription(String description) {
 		return informationDao.existsByDescription(description);
+	}
+
+
+	@Override
+	@Transactional(readOnly=true)
+	public List<Task> findAllTemplateTasks() {
+		return taskDao.findByIsTemplateTrueAndIsMainTaskTrueOrderByTemplateName();
+	}
+
+
+	@Override
+	@Transactional(readOnly=true)
+	public Page<Task> findAllTemplateTasks(Pageable pageable) {
+		return taskDao.findByIsTemplateTrueAndIsMainTaskTrueOrderByTemplateName(pageable);
+	}
+
+
+	@Override
+	@Transactional(readOnly=true)
+	public List<Task> findByIdAndDescription(Long id, String description) {
+		return taskDao.findByIdAndDescription(id, description);
 	}
 	
 	
