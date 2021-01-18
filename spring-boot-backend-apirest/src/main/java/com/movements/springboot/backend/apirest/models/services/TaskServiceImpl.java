@@ -158,6 +158,16 @@ public class TaskServiceImpl implements ITaskService{
 		return taskDao.findByIdAndDescription(id, description);
 	}
 	
+	@Override
+	@Transactional(readOnly=true)
+	public List<Task> findByUser(String username) {
+		return taskDao.findByUser(username);
+	}
 	
+	@Override
+	@Transactional(readOnly=true)
+	public List<Task> findByUserNull() {
+		return taskDao.findByCurrentAssignedUserIsNull();
+	}
 	
 }

@@ -57,7 +57,7 @@ public class Task implements Serializable {
 	
 	@ManyToOne(fetch = FetchType.LAZY, optional = true)
 	@JsonIgnoreProperties(value = { "hibernateLazyInitializer", "handler", "createAt", "currentAssignedTasks" }, allowSetters = true)
-	@JoinColumn(name="assigned_user_fk")
+	@JoinColumn(name="assigned_user")
 	private AppUser currentAssignedUser;
 	
 	

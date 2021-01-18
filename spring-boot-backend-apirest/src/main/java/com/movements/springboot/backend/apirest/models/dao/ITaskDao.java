@@ -30,4 +30,10 @@ public interface ITaskDao extends JpaRepository<Task, Long>{
 	public Page<Task> findByIsTemplateFalseAndIsMainTaskTrue(Pageable pageable);
 	
 	public List<Task> findByIdAndDescription(Long id, String description);
+	
+	
+	 @Query(nativeQuery = true, value="select * from tasks t inner join users u on t.assigned_user = u.id where u.username= ?1")
+	public List<Task> findByUser(String username);
+	 
+	 public List<Task> findByCurrentAssignedUserIsNull();
 }

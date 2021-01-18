@@ -22,6 +22,10 @@ public interface ITaskService {
 		public Task findTaskById(Long id);
 		
 		public List<Task> findByIdAndDescription(Long id, String description);
+		
+		public List<Task> findByUser(String username);
+		
+		public List<Task> findByUserNull();
 
 		public void delete(Long id);
 		

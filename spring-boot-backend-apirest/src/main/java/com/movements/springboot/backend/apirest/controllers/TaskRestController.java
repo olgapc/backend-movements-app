@@ -111,6 +111,17 @@ public class TaskRestController {
 	public List<Task> index() {
 		return taskService.findAll();
 	}
+	
+	@Secured({ "ROLE_USER", "ROLE_ADMIN" })
+	@GetMapping("/tasks/user/{username}")
+	public List<Task> listTasksByUser(@PathVariable String username) {
+		System.out.println(username);
+		if(username.equals("null")) {
+			System.out.println(username);
+			return taskService.findByUserNull();
+		}
+		return taskService.findByUser(username);
+	}
 
 	@Secured({ "ROLE_USER", "ROLE_ADMIN" })
 	@GetMapping("/tasks/page/{page}")
