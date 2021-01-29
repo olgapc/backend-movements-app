@@ -66,6 +66,7 @@ INSERT INTO users_roles (user_fk, role_fk) VALUES (2, 2);
 /* POPULATE TASKS */
 INSERT INTO tasks (description, is_to_send, is_template, number_to_calculate_deadline, type_calculation_deadline, deadline, create_at, company_fk, is_done, is_maintask, is_visible, is_periodically) VALUES ('Primera tasca', 1, 0, 2, 'DAILY', '2020-12-31', NOW(), 1, 0, 1, 1, 0);
 INSERT INTO tasks (description, is_to_send, is_template, number_to_calculate_deadline, type_calculation_deadline, deadline, create_at, company_fk, employee_fk, is_done, is_maintask, maintask_fk, is_visible, is_periodically) VALUES ('Primera subtasca',  1, 0, 2, 'DAILY', '2020-12-31', NOW(), 1, 1, 1, 0, 1, 0, 0);
+INSERT INTO tasks (description, is_to_send, is_template, number_to_calculate_deadline, type_calculation_deadline, deadline, create_at, company_fk, employee_fk, is_done, is_maintask, maintask_fk, is_visible, is_periodically) VALUES ('Segona subtasca de tasca1',  1, 0, 2, 'DAILY', '2020-12-31', NOW(), 1, 1, 1, 0, 1, 0, 0);
 INSERT INTO tasks (description, is_to_send, is_template, template_name, number_to_calculate_deadline, type_calculation_deadline, deadline, create_at, company_fk, employee_fk, is_done, is_maintask, is_visible, is_periodically) VALUES ('Primera plantilla',  1, 1, 'Plantilla', 2, 'DAILY', '2020-12-31', NOW(), 1, 1, 0, 1, 0, 0);
 INSERT INTO tasks (description, is_to_send, is_template, number_to_calculate_deadline, type_calculation_deadline, deadline, create_at, company_fk, employee_fk, is_done, is_maintask, maintask_fk, is_visible, is_periodically) VALUES ('Primera subtasca de plantilla',  1, 1, 2, 'DAILY', '2020-12-31', NOW(), 1, 1, 0, 0, 3, 0, 0);
 INSERT INTO tasks (description, is_to_send, is_template, template_name, number_to_calculate_deadline, type_calculation_deadline, deadline, create_at, company_fk, employee_fk, is_done, is_maintask, is_visible, is_periodically) VALUES ('Una altra plantilla 1',  1, 1, 'Plantilla 1', 2, 'DAILY', '2020-12-31', NOW(), 1, 1, 0, 1, 0, 0);
@@ -90,3 +91,6 @@ INSERT INTO tasks (description, is_to_send, is_template, number_to_calculate_dea
 /* POPULATE TASK_INFORMATIONS */
 INSERT INTO task_informations (information_fk, task_fk, create_at, comment, done, is_sticked) VALUES ('1', '1', NOW(), 'primer comentari', 0, 1);
 INSERT INTO task_informations (information_fk, task_fk, create_at, comment, done, is_sticked) VALUES ('2', '1', NOW(), 'un altre comentari', 0, 0);
+/* POPULATE TASK_SEQUENCES */
+INSERT INTO task_sequences (subtask_fk, pretask_fk, create_at, comment) VALUES ('2', '1', NOW(), 'subtasca de la tasca 1');
+INSERT INTO task_sequences (subtask_fk, pretask_fk, create_at, comment) VALUES ('3', '1', NOW(), 'subtasca2 de la tasca 1');

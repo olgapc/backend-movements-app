@@ -17,11 +17,8 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
-import javax.persistence.OneToOne;
 import javax.persistence.PrePersist;
 import javax.persistence.Table;
-import javax.validation.constraints.NotEmpty;
-import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
@@ -61,26 +58,18 @@ public class Task implements Serializable {
 	private AppUser currentAssignedUser;
 	
 	
-	/*
-	 * @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-	 * 
-	 * @JoinColumn(name = "before_task_fk")
-	 * 
-	 * @JsonIgnoreProperties({ "hibernateLazyInitializer", "handler" }) private
-	 * List<AfterBeforeTask> beforeTasks;
-	 * 
-	 * @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-	 * 
-	 * @JoinColumn(name = "after_task_fk")
-	 * 
-	 * @JsonIgnoreProperties({ "hibernateLazyInitializer", "handler" }) private
-	 * List<AfterBeforeTask> afterTasks;
-	 */
-	
 	@Column(name = "is_periodically")
 	private boolean isPeriodically;
 	
+	@OneToMany(fetch = FetchType.LAZY, mappedBy = "pretask", cascade = CascadeType.ALL)
+	@JsonIgnoreProperties(value = { "mainTask", "hibernateLazyInitializer", "handler",
+			"pretask" }, allowSetters = true)
+	private List<TaskSequence> subtasks;
 	
+	@OneToMany(fetch = FetchType.LAZY, mappedBy = "subtask", cascade = CascadeType.ALL)
+	@JsonIgnoreProperties(value = { "mainTask", "hibernateLazyInitializer", "handler",
+			"subtask", "pretask" }, allowSetters = true)
+	private List<TaskSequence> pretasks;
 	
 	
 	//********ONLY TEMPLATE ATTRIBUTES********
@@ -145,12 +134,7 @@ public class Task implements Serializable {
 	@JsonIgnoreProperties({ "hibernateLazyInitializer", "handler" })
 	private List<TaskInformation> taskInformationsStickedToMainTask;
 
-	@OneToMany(fetch = FetchType.LAZY, mappedBy = "mainTask")
-	@JsonIgnoreProperties(value = { "mainTask", "hibernateLazyInitializer", "handler",
-			"subtasks" }, allowSetters = true)
-	private List<Task> subtasks;
-	
-	
+
 	
 	
 	//*******ONLY SUBTASK ATTRIBUTES*********
@@ -164,9 +148,7 @@ public class Task implements Serializable {
 	public Task() {
 		taskInformations = new ArrayList<TaskInformation>();
 		subtasks = new ArrayList<>();
-		/*
-		 * beforeTasks = new ArrayList<>(); afterTasks = new ArrayList<>();
-		 */
+		pretasks = new ArrayList<>();
 		taskInformationsStickedToMainTask = new ArrayList<>();
 	}
 
@@ -281,17 +263,28 @@ public class Task implements Serializable {
 		this.taskInformations = taskInformations;
 	}
 
-	/*
-	 * public List<AfterBeforeTask> getBeforeTasks() { return beforeTasks; }
-	 * 
-	 * public void setBeforeTasks(List<AfterBeforeTask> beforeTasks) {
-	 * this.beforeTasks = beforeTasks; }
-	 * 
-	 * public List<AfterBeforeTask> getAfterTasks() { return afterTasks; }
-	 * 
-	 * public void setAfterTasks(List<AfterBeforeTask> afterTasks) { this.afterTasks
-	 * = afterTasks; }
-	 */
+
+
+	public List<TaskSequence> getPretasks() {
+		return pretasks;
+	}
+
+	public void setPretasks(List<TaskSequence> pretasks) {
+		this.pretasks = pretasks;
+	}
+	
+	
+	public List<TaskSequence> getSubtasks() {
+		return subtasks;
+	}
+	
+	
+	public void setSubtasks(List<TaskSequence> subtasks) {
+		this.subtasks = subtasks;
+	}
+	
+
+
 
 	public void setToSend(boolean isToSend) {
 		this.isToSend = isToSend;
@@ -349,14 +342,6 @@ public class Task implements Serializable {
 		this.isTemplate = isTemplate;
 	}
 
-	public List<Task> getSubtasks() {
-		return subtasks;
-	}
-
-	public void setSubtasks(List<Task> subtasks) {
-		this.subtasks = subtasks;
-	}
-
 
 	public boolean getIsDone() {
 		return isDone;
@@ -394,22 +379,26 @@ public class Task implements Serializable {
 
 
 	//*******ADD METHODS******
-	/*
-	 * public void addBeforeTasks(AfterBeforeTask beforeTask) {
-	 * this.beforeTasks.add(beforeTask); }
-	 * 
-	 * public void addAfterTasks(AfterBeforeTask afterTask) {
-	 * this.afterTasks.add(afterTask); }
-	 */
 	
 	public void addTaskInformation(TaskInformation taskInformation) {
 		taskInformations.add(taskInformation);
 	}
 
-	public void addSubtask(Task subtask) {
+	public void addSubtask(TaskSequence subtask) {
+		if(subtasks.contains(subtask)) return;
+		
 		subtasks.add(subtask);
+		subtask.setPretask(this);
+		
 	}
 	
+	public void addPretask(TaskSequence pretask) {
+		if(pretasks.contains(pretask)) return;
+		
+		pretasks.add(pretask);
+		pretask.setPretask(this);
+		
+	}
 
 	
 	//******HASHCODE AND EQUALS METHODS******

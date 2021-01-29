@@ -220,8 +220,7 @@ public class TaskRestController {
 			currentTask.setComment(task.getComment());
 			currentTask.setTypeCalculationDeadline(task.getTypeCalculationDeadline());
 			currentTask.setTaskInformations(task.getTaskInformations());
-			//currentTask.setBeforeTasks(task.getBeforeTasks());
-			//currentTask.setAfterTasks(task.getAfterTasks());
+
 			currentTask.setIsPeriodically(task.getIsPeriodically());
 			//currentTask.setHistoricUserAssignments(task.getHistoricUserAssignments());
 			currentTask.setCurrentAssignedUser(task.getCurrentAssignedUser());
@@ -238,6 +237,7 @@ public class TaskRestController {
 			currentTask.setIsMainTask(task.getIsMainTask());
 			//currentTask.setTaskInformationsStickedToMainTask(task.getTaskInformationsStickedToMainTask());
 			currentTask.setSubtasks(task.getSubtasks());
+			currentTask.setPretasks(task.getPretasks());
 			//currentTask.setNumberToCalculateDeadline(task.getNumberToCalculateDeadline());	
 
 			updatedTask = taskService.save(currentTask);
