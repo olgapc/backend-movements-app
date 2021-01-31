@@ -4,6 +4,7 @@ import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -17,6 +18,9 @@ import javax.persistence.OneToMany;
 import javax.persistence.PrePersist;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Size;
+
+import org.hibernate.annotations.Type;
+
 import javax.validation.constraints.Email;
 import javax.persistence.Table;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
@@ -26,8 +30,10 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 public class AppUser implements Serializable {
 
 	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Long id;
+	@GeneratedValue//(strategy = GenerationType.IDENTITY)
+	@Type(type="uuid-char")
+	@Column(length = 36)
+	private UUID id;
 
 	@NotEmpty(message = "no pot estar buit")
 	@Size(min = 4, max = 12, message = "ha de tenir entre 4 i 12 caràcters")
@@ -75,11 +81,11 @@ public class AppUser implements Serializable {
 		currentAssignedTasks = new ArrayList<Task>();
 	}
 
-	public Long getId() {
+	public UUID getId() {
 		return id;
 	}
 
-	public void setId(Long id) {
+	public void setId(UUID id) {
 		this.id = id;
 	}
 

@@ -2,11 +2,11 @@ package com.movements.springboot.backend.apirest.models.dao;
 
 
 import org.springframework.data.jpa.repository.JpaRepository;
-
+import java.util.UUID;
 import com.movements.springboot.backend.apirest.models.entity.AppUser;
 
 
-public interface IUserDao extends JpaRepository<AppUser, Long>{
+public interface IUserDao extends JpaRepository<AppUser, UUID>{
 
 	public AppUser findByUsername(String username);
 	

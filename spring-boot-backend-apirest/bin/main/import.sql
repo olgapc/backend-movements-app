@@ -51,18 +51,18 @@ INSERT INTO employees (employee_name, nif, naf, email, phone, create_at, company
 INSERT INTO employees (employee_name, nif, naf, email, phone, create_at, company_fk, nif_type) VALUES ('Sofía Esteban Jurado', 'Y6768709A', '08-1234567-09', 'olgapctu2@gmail.com', '677773', NOW(), 2, 'NIE');
 INSERT INTO employees (employee_name, nif, naf, email, phone, create_at, company_fk, nif_type) VALUES ('Maite Esteban Jurado', 'AAEF68708W', '08-1234567-09', 'olgapctu2@gmail.com', '677773', NOW(), 4, 'PASSPORT');
 /* POPULATE USERS */
-INSERT INTO users (id, username, password, is_enabled, name, last_name, email, create_at) VALUES (1, 'olga','$2a$10$O9wxmH/AeyZZzIS09Wp8YOEMvFnbRVJ8B4dmAMVSGloR62lj.yqXG', 1, 'olga', 'pérez', 'olgapc@gmail.com', NOW());
-INSERT INTO users (id, username, password, is_enabled, name, last_name, email, create_at) VALUES (2, 'admin','$2a$10$DOMDxjYyfZ/e7RcBfUpzqeaCs8pLgcizuiQWXPkU35nOhZlFcE9MS', 1, 'admin', 'general', 'olgapc2@gmail.com', NOW());
+INSERT INTO users (id, username, password, is_enabled, name, last_name, email, create_at) VALUES ('dbb55244-327f-4d27-ae53-0bb4e1b8e9d2','olga','$2a$10$O9wxmH/AeyZZzIS09Wp8YOEMvFnbRVJ8B4dmAMVSGloR62lj.yqXG', 1, 'olga', 'pérez', 'olgapc@gmail.com', NOW());
+INSERT INTO users (id, username, password, is_enabled, name, last_name, email, create_at) VALUES ('a3c5fad4-ec74-4bfa-b9dd-13d00820f6c7', 'admin','$2a$10$DOMDxjYyfZ/e7RcBfUpzqeaCs8pLgcizuiQWXPkU35nOhZlFcE9MS', 1, 'admin', 'general', 'olgapc2@gmail.com', NOW());
 /* POPULATE ROLES */
 INSERT INTO roles (description, role, create_at) VALUES ('Usuari','ROLE_USER', NOW());
 INSERT INTO roles (description, role, create_at) VALUES ('Administrador','ROLE_ADMIN', NOW());
 /* POPULATE USERS ROLES */
-/*INSERT INTO users_roles (user_fk, role_fk, create_at) VALUES (1, 1, NOW());*/
-/*INSERT INTO users_roles (user_fk, role_fk, create_at) VALUES (2, 1, NOW());*/
-/*INSERT INTO users_roles (user_fk, role_fk, create_at) VALUES (2, 2, NOW());*/
-INSERT INTO users_roles (user_fk, role_fk) VALUES (1, 1);
-INSERT INTO users_roles (user_fk, role_fk) VALUES (2, 1);
-INSERT INTO users_roles (user_fk, role_fk) VALUES (2, 2);
+/*INSERT INTO users_roles (user_fk, role_fk, create_at) VALUES ('5d47708c7e2947a9b88c26593099cc94', 1, NOW());*/
+/*INSERT INTO users_roles (user_fk, role_fk, create_at) VALUES ('68dfe3aa376c442ebad6f81ed76559d0', 1, NOW());*/
+/*INSERT INTO users_roles (user_fk, role_fk, create_at) VALUES ('68dfe3aa376c442ebad6f81ed76559d0', 2, NOW());*/
+INSERT INTO users_roles (user_fk, role_fk) VALUES ('dbb55244-327f-4d27-ae53-0bb4e1b8e9d2', 1);
+INSERT INTO users_roles (user_fk, role_fk) VALUES ('a3c5fad4-ec74-4bfa-b9dd-13d00820f6c7', 1);
+INSERT INTO users_roles (user_fk, role_fk) VALUES ('a3c5fad4-ec74-4bfa-b9dd-13d00820f6c7', 2);
 /* POPULATE TASKS */
 INSERT INTO tasks (description, is_to_send, is_template, number_to_calculate_deadline, type_calculation_deadline, deadline, create_at, company_fk, is_done, is_maintask, is_visible, is_periodically) VALUES ('Primera tasca', 1, 0, 2, 'DAILY', '2020-12-31', NOW(), 1, 0, 1, 1, 0);
 INSERT INTO tasks (description, is_to_send, is_template, number_to_calculate_deadline, type_calculation_deadline, deadline, create_at, company_fk, employee_fk, is_done, is_maintask, maintask_fk, is_visible, is_periodically) VALUES ('Primera subtasca',  1, 0, 2, 'DAILY', '2020-12-31', NOW(), 1, 1, 1, 0, 1, 0, 0);

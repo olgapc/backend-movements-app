@@ -2,6 +2,8 @@ package com.movements.springboot.backend.apirest.models.services;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -54,13 +56,13 @@ public class UserServiceImpl implements IUserService, UserDetailsService{
 
 	@Override
 	@Transactional(readOnly = true)
-	public AppUser findById(Long id) {
+	public AppUser findById(UUID id) {
 		return userDao.findById(id).orElse(null);
 	}
 
 	@Override
 	@Transactional
-	public void delete(Long id) {
+	public void delete(UUID id) {
 		userDao.deleteById(id);		
 	}
 

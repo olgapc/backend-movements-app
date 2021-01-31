@@ -3,6 +3,7 @@ package com.movements.springboot.backend.apirest.controllers;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 import javax.validation.Valid;
@@ -79,9 +80,9 @@ public class UserRestController {
 	
 	
 	@Secured("ROLE_ADMIN")
-	@GetMapping("/users/{id}")
-	public ResponseEntity<?> show(@PathVariable Long id) {
-
+	@GetMapping("/users/{idString}")
+	public ResponseEntity<?> show(@PathVariable String idString) {
+		UUID id = UUID.fromString(idString);
 		AppUser user = null;
 		Map<String, Object> response = new HashMap<>();
 
@@ -155,7 +156,7 @@ public class UserRestController {
 	
 	@Secured("ROLE_ADMIN")
 	@PutMapping("/users/{id}")
-	public ResponseEntity<?> update(@Valid @RequestBody AppUser user, BindingResult result, @PathVariable Long id) {
+	public ResponseEntity<?> update(@Valid @RequestBody AppUser user, BindingResult result, @PathVariable UUID id) {
 
 		AppUser currentUser = userService.findById(id);
 		AppUser updatedUser = null;
@@ -217,7 +218,7 @@ public class UserRestController {
 	
 	@Secured("ROLE_ADMIN")
 	@DeleteMapping("/users/{id}")
-	public ResponseEntity<?> delete(@PathVariable Long id) {
+	public ResponseEntity<?> delete(@PathVariable UUID id) {
 		
 		Map<String, Object> response = new HashMap<>();
 
