@@ -1,6 +1,7 @@
 package com.movements.springboot.backend.apirest.models.services;
 
 import java.util.List;
+import java.util.UUID;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -19,7 +20,7 @@ public interface ITaskService {
 
 		public Task save(Task task);
 		
-		public Task findTaskById(Long id);
+		public Task findTaskById(UUID id);
 		
 		public List<Task> findByIdAndDescription(Long id, String description);
 		
@@ -27,7 +28,7 @@ public interface ITaskService {
 		
 		public List<Task> findByUserNull();
 
-		public void delete(Long id);
+		public void delete(UUID id);
 		
 		//employees methods
 		public Employee findEmployeeById(Long id);

@@ -5,6 +5,7 @@ import java.time.LocalDate;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 import javax.servlet.http.HttpServletRequest;
@@ -73,14 +74,14 @@ public class TaskRestController {
 	@Secured({ "ROLE_USER", "ROLE_ADMIN" })
 	@GetMapping("/tasks/{idTask}")
 	@ResponseStatus(HttpStatus.OK)
-	public Task show(@PathVariable(value = "idTask") Long idTask, Model model, RedirectAttributes flash) {
-
-		return taskService.findTaskById(idTask);
+	public Task show(@PathVariable(value = "idTask") UUID id, Model model, RedirectAttributes flash) {
+		//UUID id = UUID.fromString(idString);
+		return taskService.findTaskById(id);
 	}
 
 	@Secured({ "ROLE_USER", "ROLE_ADMIN" })
 	@DeleteMapping("/tasks/{id}")
-	public ResponseEntity<?> delete(@PathVariable Long id) {
+	public ResponseEntity<?> delete(@PathVariable (value="id") UUID id) {
 
 		Map<String, Object> response = new HashMap<>();
 
@@ -190,7 +191,7 @@ public class TaskRestController {
 
 	@Secured({ "ROLE_USER", "ROLE_ADMIN" })
 	@PutMapping("/tasks/{id}")
-	public ResponseEntity<?> update(@Valid @RequestBody Task task, BindingResult result, @PathVariable Long id) {
+	public ResponseEntity<?> update(@Valid @RequestBody Task task, BindingResult result, @PathVariable UUID id) {
 		
 		Task currentTask = taskService.findTaskById(id);
 		Task updatedTask = null;

@@ -1,5 +1,6 @@
 package com.movements.springboot.backend.apirest.models.dao;
 import java.util.List;
+import java.util.UUID;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -9,7 +10,7 @@ import org.springframework.data.repository.PagingAndSortingRepository;
 
 import com.movements.springboot.backend.apirest.models.entity.Task;
 
-public interface ITaskDao extends JpaRepository<Task, Long>{
+public interface ITaskDao extends JpaRepository<Task, UUID>{
 	
 	@Query(nativeQuery = true, value="select * from tasks t "
 			+ "left join tasks t2 on t.id = t2.maintask_fk "

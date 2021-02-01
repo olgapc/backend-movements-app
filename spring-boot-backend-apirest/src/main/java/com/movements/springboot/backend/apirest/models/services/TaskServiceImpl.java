@@ -1,6 +1,7 @@
 package com.movements.springboot.backend.apirest.models.services;
 
 import java.util.List;
+import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -56,7 +57,7 @@ public class TaskServiceImpl implements ITaskService{
 
 	@Override
 	@Transactional
-	public void delete(Long id) {
+	public void delete(UUID id) {
 		taskDao.deleteById(id);	
 	}
 
@@ -86,7 +87,7 @@ public class TaskServiceImpl implements ITaskService{
 
 	@Override
 	@Transactional (readOnly=true)
-	public Task findTaskById(Long id) {
+	public Task findTaskById(UUID id) {
 		return taskDao.findById(id).orElse(null);
 	}
 

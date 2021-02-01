@@ -81,8 +81,8 @@ public class UserRestController {
 	
 	@Secured("ROLE_ADMIN")
 	@GetMapping("/users/{idString}")
-	public ResponseEntity<?> show(@PathVariable String idString) {
-		UUID id = UUID.fromString(idString);
+	public ResponseEntity<?> show(@PathVariable(value="idString") UUID id) {
+		//UUID id = UUID.fromString(idString);
 		AppUser user = null;
 		Map<String, Object> response = new HashMap<>();
 

@@ -4,6 +4,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -32,7 +33,7 @@ import com.movements.springboot.backend.apirest.models.enums.TimesType;
 
 public class TaskResponse {
 
-	private Long id;
+	private UUID id;
 
 	private String description;
 
@@ -77,7 +78,7 @@ public class TaskResponse {
 		this.deadline = task.getDeadline();
 	}
 
-	public Long getId() {
+	public UUID getId() {
 		return id;
 	}
 
