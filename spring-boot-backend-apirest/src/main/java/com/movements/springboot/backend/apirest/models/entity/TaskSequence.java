@@ -30,13 +30,15 @@ public class TaskSequence implements Serializable {
 	@ManyToOne(fetch=FetchType.LAZY)
 	@JsonIgnoreProperties(value = {"hibernateLazyInitializer", "handler"}, allowSetters = true)
 	@JoinColumn(name="subtask_fk")
-	Task subtask;
+	private Task subtask;
 	
-	@ManyToOne(fetch=FetchType.LAZY)
-	@JsonIgnoreProperties(value = {"hibernateLazyInitializer", "handler",
-			"subtasks" }, allowSetters = true)
-	@JoinColumn(name="pretask_fk")
-	Task pretask;
+	private int position;
+	
+	//@ManyToOne(fetch=FetchType.LAZY)
+	//@JsonIgnoreProperties(value = {"hibernateLazyInitializer", "handler",
+	//		"subtasks" }, allowSetters = true)
+	//@JoinColumn(name="pretask_fk")
+	//private Task pretask;
 
 	private String comment;
 
@@ -69,13 +71,23 @@ public class TaskSequence implements Serializable {
 		this.subtask = subtask;
 	}
 
-	public Task getPretask() {
-		return pretask;
+	
+	
+	public int getPosition() {
+		return position;
 	}
 
-	public void setPretask(Task pretask) {
-		this.pretask = pretask;
+	public void setPosition(int position) {
+		this.position = position;
 	}
+
+	//public Task getPretask() {
+	//	return pretask;
+	//}
+
+	//public void setPretask(Task pretask) {
+	//	this.pretask = pretask;
+	//}
 
 	public String getComment() {
 		return comment;

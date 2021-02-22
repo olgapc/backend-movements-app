@@ -71,7 +71,8 @@ public class Task implements Serializable {
 	@Column(name = "is_periodically")
 	private boolean isPeriodically;
 	
-	@OneToMany(fetch = FetchType.LAZY, mappedBy = "pretask", cascade = CascadeType.ALL)
+	@OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+	@JoinColumn(name = "pretask_fk")
 	@JsonIgnoreProperties(value = { "mainTask", "hibernateLazyInitializer", "handler",
 			"pretask" }, allowSetters = true)
 	private List<TaskSequence> subtasks;
@@ -398,7 +399,7 @@ public class Task implements Serializable {
 		if(subtasks.contains(subtask)) return;
 		
 		subtasks.add(subtask);
-		subtask.setPretask(this);
+		//subtask.setPretask(this);
 		
 	}
 	
@@ -406,7 +407,7 @@ public class Task implements Serializable {
 		if(pretasks.contains(pretask)) return;
 		
 		pretasks.add(pretask);
-		pretask.setPretask(this);
+		//pretask.setPretask(this);
 		
 	}
 
