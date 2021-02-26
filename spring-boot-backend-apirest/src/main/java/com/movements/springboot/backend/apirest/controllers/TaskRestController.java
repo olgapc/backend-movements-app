@@ -195,11 +195,11 @@ public class TaskRestController {
 		
 		Task currentTask = taskService.findTaskById(id);
 		Task updatedTask = null;
-
+		System.out.println(task.getSubtasks());
 		Map<String, Object> response = new HashMap<>();
 
 		if (result.hasErrors()) {
-
+			
 			List<String> errors = result.getFieldErrors().stream()
 					.map(err -> "El camp '" + err.getField() + "' " + err.getDefaultMessage())
 					.collect(Collectors.toList());
@@ -230,7 +230,7 @@ public class TaskRestController {
 			currentTask.setDoneAt(task.getDoneAt());
 			currentTask.setIsDone(task.getIsDone());
 			currentTask.setDoneBy(task.getDoneBy());
-			currentTask.setMainTask(task.getMainTask());
+			//currentTask.setMainTask(task.getMainTask());
 			currentTask.setIsVisible(task.getIsVisible());
 			currentTask.setDeadline(task.getDeadline());
 			currentTask.setEmployee(task.getEmployee());
@@ -238,7 +238,7 @@ public class TaskRestController {
 			currentTask.setIsMainTask(task.getIsMainTask());
 			//currentTask.setTaskInformationsStickedToMainTask(task.getTaskInformationsStickedToMainTask());
 			currentTask.setSubtasks(task.getSubtasks());
-			currentTask.setPretasks(task.getPretasks());
+			//currentTask.setPretasks(task.getPretasks());
 			//currentTask.setNumberToCalculateDeadline(task.getNumberToCalculateDeadline());	
 
 			updatedTask = taskService.save(currentTask);
@@ -252,7 +252,7 @@ public class TaskRestController {
 					return new ResponseEntity<Map<String, Object>>(response, HttpStatus.BAD_REQUEST);
 				}
 			}
-
+			System.out.print(e.getMostSpecificCause().getMessage());
 			response.put("message", "Error al actualitzar la tasca a la base de dades!".concat(e.getMostSpecificCause().getMessage()));
 			response.put("error", e.getMessage().concat(": ").concat(e.getMostSpecificCause().getMessage()));
 			return new ResponseEntity<Map<String, Object>>(response, HttpStatus.INTERNAL_SERVER_ERROR);

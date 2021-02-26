@@ -73,14 +73,17 @@ public class Task implements Serializable {
 	
 	@OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
 	@JoinColumn(name = "pretask_fk")
-	@JsonIgnoreProperties(value = { "mainTask", "hibernateLazyInitializer", "handler",
-			"pretask" }, allowSetters = true)
+	@JsonIgnoreProperties(value = {"hibernateLazyInitializer", "handler"})
 	private List<TaskSequence> subtasks;
 	
-	@OneToMany(fetch = FetchType.LAZY, mappedBy = "subtask", cascade = CascadeType.ALL)
-	@JsonIgnoreProperties(value = { "mainTask", "hibernateLazyInitializer", "handler",
-			"subtask", "pretask" }, allowSetters = true)
-	private List<TaskSequence> pretasks;
+	/*
+	 * @OneToMany(fetch = FetchType.LAZY, mappedBy = "subtask", cascade =
+	 * CascadeType.ALL)
+	 * 
+	 * @JsonIgnoreProperties(value = { "mainTask", "hibernateLazyInitializer",
+	 * "handler", "subtask", "pretask" }, allowSetters = true) private
+	 * List<TaskSequence> pretasks;
+	 */
 	
 	
 	//********ONLY TEMPLATE ATTRIBUTES********
@@ -111,11 +114,11 @@ public class Task implements Serializable {
 	@Column(name= "done_by")
 	private AppUser doneBy;
 
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "maintask_fk")
-	@JsonIgnoreProperties(value = { "subtasks", "employee", "company", "hibernateLazyInitializer", "handler",
-			"mainTask" }, allowSetters = true)
-	private Task mainTask;
+	//@ManyToOne(fetch = FetchType.LAZY)
+	//@JoinColumn(name = "maintask_fk")
+	//@JsonIgnoreProperties(value = { "subtasks", "employee", "company", "hibernateLazyInitializer", "handler",
+	//		"mainTask" }, allowSetters = true)
+	//private Task mainTask;
 
 	@Column(name = "is_visible")
 	private boolean isVisible;
@@ -159,7 +162,7 @@ public class Task implements Serializable {
 	public Task() {
 		taskInformations = new ArrayList<TaskInformation>();
 		subtasks = new ArrayList<>();
-		pretasks = new ArrayList<>();
+		//pretasks = new ArrayList<>();
 		taskInformationsStickedToMainTask = new ArrayList<>();
 	}
 
@@ -276,13 +279,12 @@ public class Task implements Serializable {
 
 
 
-	public List<TaskSequence> getPretasks() {
-		return pretasks;
-	}
-
-	public void setPretasks(List<TaskSequence> pretasks) {
-		this.pretasks = pretasks;
-	}
+	/*
+	 * public List<TaskSequence> getPretasks() { return pretasks; }
+	 * 
+	 * public void setPretasks(List<TaskSequence> pretasks) { this.pretasks =
+	 * pretasks; }
+	 */
 	
 	
 	public List<TaskSequence> getSubtasks() {
@@ -337,13 +339,13 @@ public class Task implements Serializable {
 		this.doneAt = doneAt;
 	}
 
-	public Task getMainTask() {
-		return mainTask;
-	}
+	//public Task getMainTask() {
+	//	return mainTask;
+	//}
 
-	public void setMainTask(Task mainTask) {
-		this.mainTask = mainTask;
-	}
+	//public void setMainTask(Task mainTask) {
+	//	this.mainTask = mainTask;
+	//}
 
 	public void setIsToSend(boolean isToSend) {
 		this.isToSend = isToSend;
@@ -403,13 +405,14 @@ public class Task implements Serializable {
 		
 	}
 	
-	public void addPretask(TaskSequence pretask) {
-		if(pretasks.contains(pretask)) return;
-		
-		pretasks.add(pretask);
-		//pretask.setPretask(this);
-		
-	}
+	/*
+	 * public void addPretask(TaskSequence pretask) { if(pretasks.contains(pretask))
+	 * return;
+	 * 
+	 * pretasks.add(pretask); //pretask.setPretask(this);
+	 * 
+	 * }
+	 */
 
 	
 	//******HASHCODE AND EQUALS METHODS******
@@ -431,7 +434,7 @@ public class Task implements Serializable {
 		result = prime * result + ((company == null) ? 0 : company.hashCode());
 		result = prime * result + (isDone ? 1231 : 1237);
 		result = prime * result + ((doneAt == null) ? 0 : doneAt.hashCode());
-		result = prime * result + ((mainTask == null) ? 0 : mainTask.hashCode());
+		//result = prime * result + ((mainTask == null) ? 0 : mainTask.hashCode());
 		result = prime * result + (isMainTask ? 1231 : 1237);
 		result = prime * result + ((comment == null) ? 0 : comment.hashCode());
 		return result;
@@ -540,13 +543,13 @@ public class Task implements Serializable {
 			return false;
 		}
 
-		if (mainTask == null) {
-			if (other.mainTask == null) {
-				return false;
-			}
-		} else if (!mainTask.equals(other.mainTask)) {
-			return false;
-		}
+		//if (mainTask == null) {
+		//	if (other.mainTask == null) {
+		//		return false;
+		//	}
+		//} else if (!mainTask.equals(other.mainTask)) {
+		//	return false;
+		//}
 
 		if (isMainTask != other.isMainTask) {
 			return false;

@@ -2,6 +2,8 @@ package com.movements.springboot.backend.apirest.models.entity;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
+
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -27,18 +29,21 @@ public class TaskSequence implements Serializable {
 	@Column(name = "create_at", columnDefinition = "TIMESTAMP")
 	private LocalDateTime createAt;
 	
-	@ManyToOne(fetch=FetchType.LAZY)
+	@ManyToOne(fetch=FetchType.LAZY, cascade = CascadeType.ALL)
 	@JsonIgnoreProperties(value = {"hibernateLazyInitializer", "handler"}, allowSetters = true)
 	@JoinColumn(name="subtask_fk")
 	private Task subtask;
 	
 	private int position;
 	
-	//@ManyToOne(fetch=FetchType.LAZY)
-	//@JsonIgnoreProperties(value = {"hibernateLazyInitializer", "handler",
-	//		"subtasks" }, allowSetters = true)
-	//@JoinColumn(name="pretask_fk")
-	//private Task pretask;
+	/*
+	 * @ManyToOne(fetch=FetchType.LAZY)
+	 * 
+	 * @JsonIgnoreProperties(value = {"hibernateLazyInitializer", "handler",
+	 * "subtasks" }, allowSetters = true)
+	 * 
+	 * @JoinColumn(name="pretask_fk") private Task pretask;
+	 */
 
 	private String comment;
 
@@ -63,13 +68,11 @@ public class TaskSequence implements Serializable {
 	}
 	
 	
-	public Task getSubtask() {
-		return subtask;
-	}
-
-	public void setSubtask(Task subtask) {
-		this.subtask = subtask;
-	}
+	/*
+	 * public Task getSubtask() { return subtask; }
+	 * 
+	 * public void setSubtask(Task subtask) { this.subtask = subtask; }
+	 */
 
 	
 	
@@ -81,13 +84,13 @@ public class TaskSequence implements Serializable {
 		this.position = position;
 	}
 
-	//public Task getPretask() {
-	//	return pretask;
-	//}
+	public Task getSubtask() {
+		return subtask;
+	}
 
-	//public void setPretask(Task pretask) {
-	//	this.pretask = pretask;
-	//}
+	public void setSubtask(Task pretask) {
+		this.subtask = pretask;
+	}
 
 	public String getComment() {
 		return comment;
