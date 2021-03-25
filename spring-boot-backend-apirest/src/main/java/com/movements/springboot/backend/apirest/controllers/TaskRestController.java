@@ -40,10 +40,12 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.movements.springboot.backend.api.TaskResponse;
 import com.movements.springboot.backend.apirest.editors.PascalCaseEditor;
+import com.movements.springboot.backend.apirest.models.entity.AppUser;
 import com.movements.springboot.backend.apirest.models.entity.Information;
 import com.movements.springboot.backend.apirest.models.entity.Task;
+import com.movements.springboot.backend.apirest.models.entity.TaskInformation;
 import com.movements.springboot.backend.apirest.models.services.ITaskService;
-
+import com.movements.springboot.backend.apirest.models.services.IUserService;
 
 @CrossOrigin(origins = { "http://localhost:4200" })
 @RestController
@@ -58,9 +60,9 @@ public class TaskRestController {
 
 	@Autowired
 	private ITaskService taskService;
-	
-	
-	
+
+	@Autowired
+	private IUserService userService;
 
 	@InitBinder
 	public void initBinder(WebDataBinder binder) {
@@ -75,13 +77,13 @@ public class TaskRestController {
 	@GetMapping("/tasks/{idTask}")
 	@ResponseStatus(HttpStatus.OK)
 	public Task show(@PathVariable(value = "idTask") UUID id, Model model, RedirectAttributes flash) {
-		//UUID id = UUID.fromString(idString);
+		// UUID id = UUID.fromString(idString);
 		return taskService.findTaskById(id);
 	}
 
 	@Secured({ "ROLE_USER", "ROLE_ADMIN" })
 	@DeleteMapping("/tasks/{id}")
-	public ResponseEntity<?> delete(@PathVariable (value="id") UUID id) {
+	public ResponseEntity<?> delete(@PathVariable(value = "id") UUID id) {
 
 		Map<String, Object> response = new HashMap<>();
 
@@ -112,12 +114,12 @@ public class TaskRestController {
 	public List<Task> index() {
 		return taskService.findAll();
 	}
-	
+
 	@Secured({ "ROLE_USER", "ROLE_ADMIN" })
 	@GetMapping("/tasks/user/{username}")
 	public List<Task> listTasksByUser(@PathVariable String username) {
 		System.out.println(username);
-		if(username.equals("null")) {
+		if (username.equals("null")) {
 			System.out.println(username);
 			return taskService.findByUserNull();
 		}
@@ -137,14 +139,11 @@ public class TaskRestController {
 			@RequestParam(name = "size", defaultValue = "10") int size) {
 		PageRequest pageRequest = PageRequest.of(page, size);
 		Page<Task> pageResult = taskService.findAll(pageRequest);
-		List<TaskResponse> tasks = pageResult
-				.stream()
-				.map(TaskResponse::new)
-				.collect(Collectors.toList());
-		
+		List<TaskResponse> tasks = pageResult.stream().map(TaskResponse::new).collect(Collectors.toList());
+
 		return new PageImpl<>(tasks, pageRequest, pageResult.getTotalElements());
-		//Pageable pageable = PageRequest.of(page, 5);
-		//return taskService.findAll(pageable);
+		// Pageable pageable = PageRequest.of(page, 5);
+		// return taskService.findAll(pageable);
 	}
 
 	@Secured({ "ROLE_USER", "ROLE_ADMIN" })
@@ -155,9 +154,9 @@ public class TaskRestController {
 		Task newTask = null;
 
 		Map<String, Object> response = new HashMap<>();
-		
+
 		if (result.hasErrors()) {
-			
+
 			List<String> errors = result.getFieldErrors().stream()
 					.map(err -> "El camp '" + err.getField() + "' " + err.getDefaultMessage())
 					.collect(Collectors.toList());
@@ -167,12 +166,22 @@ public class TaskRestController {
 		}
 
 		try {
+			if (task.getDoneBy() != null) {
+				task.setDoneBy((userService.findByUsername(task.getDoneBy().getUsername())));
+			}
 
+			List<TaskInformation> taskInformations = task.getTaskInformations();
+			for (TaskInformation taskInformation : taskInformations) {
+				if (taskInformation.getDoneBy()!= null) {
+					taskInformation.setDoneBy(userService.findByUsername(taskInformation.getDoneBy().getUsername()));
+
+				}
+			}
 			newTask = taskService.save(task);
 
 		} catch (DataAccessException e) {
 			System.out.println("errorrrrrrrr");
-			if (taskService.existsByTemplateName(task.getTemplateName())) {
+			if (task.getTemplateName() != null && taskService.existsByTemplateName(task.getTemplateName())) {
 				response.put("errors",
 						"Error al realitzar la inserció a la base de dades! Aquest nom de plantilla ja existeix");
 				return new ResponseEntity<Map<String, Object>>(response, HttpStatus.BAD_REQUEST);
@@ -192,14 +201,16 @@ public class TaskRestController {
 	@Secured({ "ROLE_USER", "ROLE_ADMIN" })
 	@PutMapping("/tasks/{id}")
 	public ResponseEntity<?> update(@Valid @RequestBody Task task, BindingResult result, @PathVariable UUID id) {
-		
+
+		System.out.println("hello1");
+
 		Task currentTask = taskService.findTaskById(id);
 		Task updatedTask = null;
 		System.out.println(task.getSubtasks());
 		Map<String, Object> response = new HashMap<>();
 
 		if (result.hasErrors()) {
-			
+
 			List<String> errors = result.getFieldErrors().stream()
 					.map(err -> "El camp '" + err.getField() + "' " + err.getDefaultMessage())
 					.collect(Collectors.toList());
@@ -220,40 +231,56 @@ public class TaskRestController {
 			currentTask.setIsToSend(task.getIsToSend());
 			currentTask.setComment(task.getComment());
 			currentTask.setTypeCalculationDeadline(task.getTypeCalculationDeadline());
-			currentTask.setTaskInformations(task.getTaskInformations());
+			
+			
 
 			currentTask.setIsPeriodically(task.getIsPeriodically());
-			//currentTask.setHistoricUserAssignments(task.getHistoricUserAssignments());
+			// currentTask.setHistoricUserAssignments(task.getHistoricUserAssignments());
 			currentTask.setCurrentAssignedUser(task.getCurrentAssignedUser());
 			currentTask.setIsTemplate(task.getIsTemplate());
 			currentTask.setTemplateName(task.getTemplateName());
 			currentTask.setDoneAt(task.getDoneAt());
 			currentTask.setIsDone(task.getIsDone());
-			currentTask.setDoneBy(task.getDoneBy());
-			//currentTask.setMainTask(task.getMainTask());
+			
+			
+			if(!task.getTaskInformations().isEmpty()) {
+				List<TaskInformation> taskInformations = task.getTaskInformations();
+				for (TaskInformation taskInformation : taskInformations) {
+					if (taskInformation.getDoneBy()!= null) {
+						taskInformation.setDoneBy(userService.findByUsername(taskInformation.getDoneBy().getUsername()));
+					}
+				}
+			}
+			currentTask.setTaskInformations(task.getTaskInformations());
+			
+			if(task.getDoneBy()!=null) {
+				currentTask.setDoneBy((userService.findByUsername(task.getDoneBy().getUsername())));
+			}
+			// currentTask.setMainTask(task.getMainTask());
 			currentTask.setIsVisible(task.getIsVisible());
 			currentTask.setDeadline(task.getDeadline());
 			currentTask.setEmployee(task.getEmployee());
 			currentTask.setCompany(task.getCompany());
 			currentTask.setIsMainTask(task.getIsMainTask());
-			//currentTask.setTaskInformationsStickedToMainTask(task.getTaskInformationsStickedToMainTask());
+			// currentTask.setTaskInformationsStickedToMainTask(task.getTaskInformationsStickedToMainTask());
 			currentTask.setSubtasks(task.getSubtasks());
-			//currentTask.setPretasks(task.getPretasks());
-			//currentTask.setNumberToCalculateDeadline(task.getNumberToCalculateDeadline());	
+			// currentTask.setPretasks(task.getPretasks());
+			// currentTask.setNumberToCalculateDeadline(task.getNumberToCalculateDeadline());
 
 			updatedTask = taskService.save(currentTask);
 
 		} catch (DataAccessException e) {
 
 			if (task.getTemplateName() != null) {
-				if(taskService.existsByTemplateName(task.getTemplateName())){
+				if (taskService.existsByTemplateName(task.getTemplateName())) {
 					response.put("errors",
 							"Error al actualitzar la tasca a la base de dades! Aquest nom de plantilla ja existeix");
 					return new ResponseEntity<Map<String, Object>>(response, HttpStatus.BAD_REQUEST);
 				}
 			}
 			System.out.print(e.getMostSpecificCause().getMessage());
-			response.put("message", "Error al actualitzar la tasca a la base de dades!".concat(e.getMostSpecificCause().getMessage()));
+			response.put("message",
+					"Error al actualitzar la tasca a la base de dades!".concat(e.getMostSpecificCause().getMessage()));
 			response.put("error", e.getMessage().concat(": ").concat(e.getMostSpecificCause().getMessage()));
 			return new ResponseEntity<Map<String, Object>>(response, HttpStatus.INTERNAL_SERVER_ERROR);
 
@@ -293,7 +320,6 @@ public class TaskRestController {
 
 		return taskService.findInformationById(idInformation);
 	}
-
 
 	@Secured({ "ROLE_USER", "ROLE_ADMIN" })
 	@PostMapping("/informations")
@@ -414,12 +440,17 @@ public class TaskRestController {
 
 	}
 
+	@GetMapping(value = "tasks/datatable1")
+	@ResponseBody
+	public ResponseEntity<List<Task>> listTasks() throws IOException {
+		return ResponseEntity.ok(taskService.findAll());
+	}
 
-	@GetMapping(value="tasks/datatable1")
-    @ResponseBody
-    public ResponseEntity<List<Task>> listTasks() throws IOException
-    {
-        return ResponseEntity.ok(taskService.findAll());
-    }
-	
+	@Secured({ "ROLE_USER", "ROLE_ADMIN" })
+	@GetMapping("/tasks/get-user/{username}")
+	@ResponseStatus(HttpStatus.OK)
+	public AppUser getUserByUsername(@PathVariable String username) {
+		return userService.findByUsername(username);
+	}
+
 }

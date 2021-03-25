@@ -111,7 +111,9 @@ public class Task implements Serializable {
 	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
 	private LocalDateTime doneAt;
 	
-	@Column(name= "done_by")
+	@ManyToOne(fetch = FetchType.LAZY, optional = true)
+	@JsonIgnoreProperties(value = { "hibernateLazyInitializer", "handler", "userRoles", "currentAssignedTasks" }, allowSetters = true)
+	@JoinColumn(name="done_by")
 	private AppUser doneBy;
 
 	//@ManyToOne(fetch = FetchType.LAZY)

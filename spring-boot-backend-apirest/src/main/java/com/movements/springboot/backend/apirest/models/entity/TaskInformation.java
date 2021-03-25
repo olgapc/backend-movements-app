@@ -40,7 +40,9 @@ public class TaskInformation implements Serializable {
 	@Column(name = "done")
 	private boolean done;
 	
-	@Column(name= "done_by")
+	@ManyToOne(fetch = FetchType.LAZY, optional = true)
+	@JsonIgnoreProperties(value = { "hibernateLazyInitializer", "handler", "userRoles", "currentAssignedTasks" }, allowSetters = true)
+	@JoinColumn(name="done_by")
 	private AppUser doneBy;
 	
 	@Column(name = "is_sticked")

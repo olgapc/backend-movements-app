@@ -236,6 +236,6 @@ public class UserRestController {
 		return new ResponseEntity<Map<String, Object>>(response, HttpStatus.OK);
 	}
 	
-	
+
 	
 }

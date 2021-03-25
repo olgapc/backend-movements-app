@@ -174,12 +174,18 @@ public class AppUser implements Serializable {
 		this.currentAssignedTasks = currentAssignedTasks;
 	}
 	
+	//*******ADD METHODS******
 	public void addCurrentAssignedTasks(Task task) {
 		if(currentAssignedTasks.contains(task))
 			return;
 		currentAssignedTasks.add(task);
 		task.setCurrentAssignedUser(this);
 	}
+	
+	public void addUserRole(UserRole userRole) {
+		userRoles.add(userRole);
+	}
+	
 	
 	private static final long serialVersionUID = 1L;
 }
