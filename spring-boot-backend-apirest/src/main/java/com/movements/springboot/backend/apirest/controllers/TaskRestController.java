@@ -98,7 +98,7 @@ public class TaskRestController {
 			return new ResponseEntity<Map<String, Object>>(response, HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 
-		response.put("message", "L'empresa s'ha eliminat amb èxit");
+		response.put("message", "La tasca s'ha eliminat amb èxit");
 		return new ResponseEntity<Map<String, Object>>(response, HttpStatus.OK);
 	}
 
@@ -231,8 +231,6 @@ public class TaskRestController {
 			currentTask.setIsToSend(task.getIsToSend());
 			currentTask.setComment(task.getComment());
 			currentTask.setTypeCalculationDeadline(task.getTypeCalculationDeadline());
-			
-			
 
 			currentTask.setIsPeriodically(task.getIsPeriodically());
 			// currentTask.setHistoricUserAssignments(task.getHistoricUserAssignments());
@@ -255,6 +253,8 @@ public class TaskRestController {
 			
 			if(task.getDoneBy()!=null) {
 				currentTask.setDoneBy((userService.findByUsername(task.getDoneBy().getUsername())));
+			} else {
+				currentTask.setDoneBy(null);
 			}
 			// currentTask.setMainTask(task.getMainTask());
 			currentTask.setIsVisible(task.getIsVisible());
@@ -452,5 +452,27 @@ public class TaskRestController {
 	public AppUser getUserByUsername(@PathVariable String username) {
 		return userService.findByUsername(username);
 	}
+	
+	@Secured({ "ROLE_USER", "ROLE_ADMIN" })
+	@DeleteMapping("/taskInformations/{id}")
+	public ResponseEntity<?> deleteTaskInformation(@PathVariable(value = "id") Long id) {
+
+		Map<String, Object> response = new HashMap<>();
+
+		try {
+
+			taskService.deleteTaskInformation(id);
+
+		} catch (DataAccessException e) {
+
+			response.put("message", "Error al eliminar la informació de la tasca de la base de dades!");
+			response.put("error", e.getMessage().concat(": ").concat(e.getMostSpecificCause().getMessage()));
+			return new ResponseEntity<Map<String, Object>>(response, HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+
+		response.put("message", "La informació de la tasca s'ha eliminat amb èxit");
+		return new ResponseEntity<Map<String, Object>>(response, HttpStatus.OK);
+	}
+	
 
 }

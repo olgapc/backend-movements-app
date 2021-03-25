@@ -43,6 +43,8 @@ public interface ITaskService {
 		
 		public void deleteInformation(Long id);
 		
+		public void deleteTaskInformation(Long id);
+		
 		public List<Information> findAllInformations();
 		
 		public Page<Information> findAllInformations(Pageable pageable);

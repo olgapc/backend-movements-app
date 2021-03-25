@@ -13,6 +13,7 @@ import com.movements.springboot.backend.apirest.models.dao.ICompanyDao;
 import com.movements.springboot.backend.apirest.models.dao.IEmployeeDao;
 import com.movements.springboot.backend.apirest.models.dao.IInformationDao;
 import com.movements.springboot.backend.apirest.models.dao.ITaskDao;
+import com.movements.springboot.backend.apirest.models.dao.ITaskInformationDao;
 import com.movements.springboot.backend.apirest.models.entity.Company;
 import com.movements.springboot.backend.apirest.models.entity.Employee;
 import com.movements.springboot.backend.apirest.models.entity.Information;
@@ -30,6 +31,9 @@ public class TaskServiceImpl implements ITaskService{
 	
 	@Autowired
 	private IEmployeeDao employeeDao;
+	
+	@Autowired
+	private ITaskInformationDao taskInformationDao;
 	
 	@Autowired
 	private IInformationDao informationDao;
@@ -171,5 +175,14 @@ public class TaskServiceImpl implements ITaskService{
 	public List<Task> findByUserNull() {
 		return taskDao.findByCurrentAssignedUserIsNull();
 	}
+
+
+	@Override
+	@Transactional
+	public void deleteTaskInformation(Long id) {
+		taskInformationDao.deleteById(id);
+	}
+	
+
 	
 }
